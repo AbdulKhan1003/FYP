@@ -1,0 +1,105 @@
+.under {
+    background-color: rgb(118, 58, 240);
+    width: 90px;
+    height: 6px;
+    border-radius: 9px;
+}
+
+.personDiv img,
+.emailDiv img,
+.passDiv img {
+    height: 30px;
+    width: 30px;
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.personDiv,
+.emailDiv,
+.passDiv {
+    width: 40vw;
+    background-color: rgb(189, 189, 189);
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width:1200px) {
+
+    .personDiv,
+    .emailDiv,
+    .passDiv {
+        width: 60vw;
+        background-color: rgb(189, 189, 189);
+        height: 50px;
+        display: flex;
+    }
+}
+
+@media screen and (max-width:850px) {
+
+    .personDiv,
+    .emailDiv,
+    .passDiv {
+        width: 70vw;
+        background-color: rgb(189, 189, 189);
+        display: flex;
+    }
+
+    .personDiv img,
+    .emailDiv img,
+    .passDiv img {
+        height: 30px;
+        width: 30px;
+        margin-right: 5px;
+    }
+
+    .feedback-form {
+        width: 80%;
+    }
+
+}
+
+@media screen and (max-width:550px) {
+
+    .personDiv,
+    .emailDiv,
+    .passDiv {
+        width: 82vw;
+    }
+}
+
+.personDiv input,
+.emailDiv input,
+.passDiv input {
+    border: none;
+    background-color: rgb(189, 189, 189);
+}
+
+.btn-purple {
+    width: 100px;
+    height: 40px;
+    border-radius: 25px;
+    background-color: rgb(118, 58, 240);
+    color: black
+}
+
+.bg-img {
+    background: url('../../../public/login-page2.jpeg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+}
+
+.bg-form {
+    background-color: rgba(0, 0, 0, 0.76);
+}
+
+.feedback-form {
+    width: 80%;
+}
+
+@media screen and (max-width:700px) {
+    .feedback-form {
+        display: none !important;
+    }
+}
