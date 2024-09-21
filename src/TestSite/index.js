@@ -12,37 +12,49 @@ import Cart from './Components/cart'
 import LoginSignup from './Authentication/LoginSignup'
 import './Authentication/LoginSignup.css'
 import Profile from './Components/profile';
+import Checkout from './Components/checkout';
 
 const Index = () => {
-  const [loggedIn,setLoggedIn] = useState(false)
-  let loggedVal = JSON.parse(localStorage.getItem('LoggedIn'))
+  const [loggedIn, setLoggedIn] = useState(null); // Initial state set to null to prevent rendering the main page initially
+  let loggedVal = JSON.parse(localStorage.getItem('LoggedIn'));
 
-  useEffect(()=>{
-    loggedVal === 1?setLoggedIn(true):setLoggedIn(false)
-  },[loggedVal, loggedIn])
+  useEffect(() => {
+    if (loggedVal === 0) {
+      setLoggedIn(false);
+    } else {
+      setLoggedIn(true);
+    }
+  }, [loggedVal]);
+
+  if (loggedIn === null) {
+    return <h1 className="text-center">Loading...</h1>  
+  }
 
   return (
     <Router>
       <div className="app">
-      {!loggedIn && <LoginSignup />}
-       {loggedIn && <div className='content'>
-         <Navbar />
-          <Routes>
-            <Route index path="/home" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/restaurant/:id" element={<Restaurants />} />
-            <Route path="/cart/:restID/:prodID" element={<Cart />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<Navigate to="/home" />} />
-          </Routes>
+        {!loggedIn && <LoginSignup />}
+        {loggedIn && (
+          <div className="content">
+            <Navbar />
+            <Routes>
+              <Route index path="/home" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/restaurant/:id" element={<Restaurants />} />
+              <Route path="/cart/:restID/:prodID" element={<Cart />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="*" element={<Navigate to="/home" />} />
+            </Routes>
+          </div>
+        )}
         <Footer />
-        </div> }
       </div>
     </Router>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

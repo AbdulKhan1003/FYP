@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import Title from '../ReUsables/Title'
@@ -10,48 +10,33 @@ const Restaurants = () => {
   const { id } = useParams()
   const { restaurant, cartItems, setCartItems } = useContext(MenuContext)
   const navigate = useNavigate()
-  const [price, setPrice] = useState("None")
 
   useEffect(() => {
     console.log("Cart Items:", cartItems)
     localStorage.setItem('Cart Items', JSON.stringify(cartItems))
   }, [cartItems])
 
-  const AddProduct = (prod) => {
-    const existingProduct = cartItems.find(item => item.pID === prod.pID);
-    if (existingProduct !== undefined && existingProduct !== null) {
-      console.log("same id")
-      setCartItems(
-        cartItems.map((item) => {
-          return { ...item, quantity: item.quantity + 1 };
-        })
-      );
-      toast.success(`Quantity of ${prod.pName} increased `)
+  const AddProduct = (prod,restaurant) => {
 
-    } else {
-      toast.success("New Prod added")
-      setCartItems([...cartItems, prod])
-      navigate('/cart')
-    }
-  }
-  const productSize = (prod, size) => {
-      var prodToResize = restaurant[id - 1].products.find((product) => {
-        return product.pID === prod.pID
-    })
-    console.log(prodToResize)
-    if(size==="Half"){
-      setPrice(restaurant[id-1].products[prod.pID-1].price)
-    }
-    else if(size === "Full"){
-      setPrice(restaurant[id-1].products[prod.pID-1].priceFull)
-    }
-
-    restaurant[id-1].products.map((prods)=>{
-      if(prods.pID!== prod.pID){
-        console.log("Itni ni milti",prods)
-        setPrice(restaurant[id-1].products[prod.pID-1].price)
+      const existingProduct = cartItems.find(item => item.pID === prod.pID);
+      if (existingProduct !== undefined && existingProduct !== null) {
+        console.log("same id")
+        setCartItems(
+          cartItems.map((item) => {
+            const unitPrice = item.price / item.quantity
+            return { ...item, 
+              quantity: item.quantity + 1,
+              price: item.price + unitPrice
+            };
+          })
+        );
+        toast.success(`Quantity of ${prod.pName} increased `)
+        
+      } else {
+        toast.success("New Prod added")
+        setCartItems([...cartItems, prod])
+        navigate('/cart')
       }
-    })
   }
 
     return (
@@ -68,13 +53,13 @@ const Restaurants = () => {
                   <div>
                     <p className={`mb-0 badge rounded-pill bg-${prod.isAvailable ? 'success' : 'danger'}`}>{prod.isAvailable ? 'In-Stock' : 'Out of Stock'}</p>
                   </div>
-                  <p className="text-dark mt-3 fs-5">Rs.{price}</p>
+                  <p className="text-dark mt-3 fs-5">Rs.{prod.price}</p>
                   {prod.size ? prod.size.map((items, index) => {
                     //work in progress
-                    return <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3' onClick={() => productSize(prod, items)}>{items}</Button>
+                    return <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
                   }) : ''}
                   <br />
-                  <Button type='button' className='mt-3' color='primary' outline disabled={!prod.isAvailable} onClick={() => AddProduct(prod)}>Add to Cart
+                  <Button type='button' className='mt-3' color='primary' outline disabled={!prod.isAvailable} onClick={() => AddProduct(prod,restaurant[id-1].rID)}>Add to Cart
                   </Button>
                 </div>
               </div>
