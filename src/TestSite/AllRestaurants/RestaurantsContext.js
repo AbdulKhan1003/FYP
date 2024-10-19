@@ -165,7 +165,6 @@ const restaurants = [
     ]
     }
 ]
-
 const MenuContext = createContext();
 
 const RestaurantsContext = (props) => {
@@ -177,7 +176,7 @@ const RestaurantsContext = (props) => {
     }, [cartItems]);
 
     return (
-        <MenuContext.Provider value={{ restaurant, cartItems, setCartItems }}>
+        <MenuContext.Provider value={{ restaurant, setRestaurant,cartItems, setCartItems }}>
             {props.children}
         </MenuContext.Provider>
     );

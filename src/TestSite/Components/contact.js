@@ -76,7 +76,7 @@ function Contact() {
   };
 
   return (
-    <div className="contact-bg container-lg w-50 pt-4">
+    <div className="contact-bg container-lg pt-4">
       <Title heading='Contact Us'></Title>
       <div className="page-content container-lg mt-5">
         <Form className="" onSubmit={(e) => {

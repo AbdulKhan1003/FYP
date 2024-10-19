@@ -34,6 +34,22 @@
 }
 .contact-bg{
     background-color: rgb(169, 251, 223);
+    width: 40vw;
+}
+@media screen and (max-width:1100px) {
+    .contact-bg{
+        width: 60vw;
+    }
+}
+@media screen and (max-width:800px) {
+    .contact-bg{
+        width: 80vw;
+    }
+}
+@media screen and (max-width:600px) {
+    .contact-bg{
+        width: 100vw;
+    }
 }
 .card-img-top{
     width: 50vh;
@@ -86,3 +102,17 @@
         margin-right: 10%;
     }
   }  
+.options:hover {
+    border: 3px solid rgb(101, 101, 244);
+}
+.prodImages{
+    width: 33%;
+    height: 269px;    
+}
+@media screen and (max-width: 900px) {
+    .prodImages{
+        width: 70%;
+        margin: auto;
+        height: 350px;
+    } 
+}

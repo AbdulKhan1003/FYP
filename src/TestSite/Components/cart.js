@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import Title from '../ReUsables/Title'
 
+// API me quantity ni haii isliye total count NAN haii. Fix 
+//quanity increase ya select me barhao ge to parameter aik add hojaye ga temporairly
 
+//aur price bhi NAN hogi agr increase kii to kwke changeQuantity() me bhi unit price ni calc hogi 
 const Cart = () => {
   const { cartItems, setCartItems } = useContext(MenuContext)
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
 
+  document.title = "ORDER UP - Cart"
   useEffect(() => {
-    document.title = "ORDER UP - Cart"
     const Price = sum(cartItems.map(item => item.price))
     const count = sum(cartItems.map(item => item.quantity))
     setTotalPrice(Price)
@@ -72,7 +75,7 @@ const Cart = () => {
                     <option value="10">10</option>
                   </select>
                 </th>
-                <td>{item.pName}</td>
+                <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item.pID)}>Remove</button></td>
               </tr>
