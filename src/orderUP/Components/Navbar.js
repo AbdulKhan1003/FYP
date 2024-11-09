@@ -1,15 +1,18 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import 'bootstrap-icons/font/bootstrap-icons.css';  
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { MenuContext } from '../AllRestaurants/RestaurantsContext';
 
 function Navbar() {
-  const {cartItems} = useContext(MenuContext)
+  const {cartQuantity,user} = useContext(MenuContext)
+  const userProfile = JSON.parse(localStorage.getItem("User"))
+  const fullName = userProfile.name
+  const firstName = fullName.split(" ")[0]
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-0 mx-2">
-        <Link to="/home" className="navbar-brand fw-bold text-success m-0 p-0 ms-4">
-        <img style={{width:'100px',height:'80px'}} src="/main-logo.png" alt="Logo" />
-        </Link>
+      <Link to="/home" className="navbar-brand fw-bold text-success m-0 p-0 ms-4">
+        <img style={{ width: '100px', height: '80px' }} src="/main-logo.png" alt="Logo" />
+      </Link>
       <Link to="/home" className="navbar-brand fw-bold text-success">ORDER UP!</Link>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
@@ -29,21 +32,23 @@ function Navbar() {
             <Link to="/contact" className="nav-link text-dark mt-1 fs-5"><span className="nav-items">Contact</span></Link>
           </li>
           <li className="nav-itemfloat-end me-3">
-        <Link to="/cart" className="mt-2 btn position-relative"> <img src="/cart-logo.png" alt="Cart" />
-  <span className="position-absolute badge rounded-pill bg-danger">{cartItems.length}</span>
-</Link>
-        </li>
+            <Link to="/cart" className="mt-2 btn position-relative"> <img src="/cart-logo.png" alt="Cart" />
+              <span className="position-absolute badge rounded-pill bg-danger">{cartQuantity.length?0:cartQuantity}</span>
+            </Link>
+          </li>
           <li className="nav-item">
             <Link to="/profile" className="nav-link text-dark">
-            <button type="button" className="btn btn-outline-success">
-            <i className="bi bi-person-fill"></i>
-            <span>UserName</span>
-            </button>
+              <button type="button" className="btn btn-outline-success">
+                <i className="bi bi-person-fill"></i>
+                {/* full name or first name whatever you want here */}
+                <span>{userProfile===null || userProfile===undefined?"Guest":`${fullName}`}</span>
+                {console.log("user",user)}
+              </button>
             </Link>
           </li>
         </ul>
       </div>
-  </nav>
+    </nav>
   )
 }
 

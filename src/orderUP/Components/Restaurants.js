@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import Title from '../ReUsables/Title'
 import { Button } from 'reactstrap'
@@ -8,10 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useFetchItems } from '../hooks/useFetchItems'
 
 const Restaurants = () => {
-  const { id } = useParams()
-  const { cartItems, setCartItems } = useContext(MenuContext)
+  const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
+  const navigate = useNavigate()
   const { items, fetchItems } =
-  useFetchItems(`http://192.168.1.16:8080/api/auth/restaurant/${id}/items`);
+  useFetchItems(`http://192.168.1.10:8080/api/auth/restaurant/${restId}/items`);
 
   
   document.title = "ORDER UP - Products"
@@ -22,14 +22,13 @@ const Restaurants = () => {
   useEffect(() => {
     fetchItemData();
   },[]);
-  const navigate = useNavigate()
+  console.log("Items",items)
   useEffect(() => {
     console.log("Cart Items:", cartItems)
     localStorage.setItem('Cart Items', JSON.stringify(cartItems))
   }, [cartItems])
   
   const AddProduct = (prod) => {
-    console.log("prod id haii:",prod._id)
     const existingProduct = cartItems.find(item => item._id === prod._id);
     if (existingProduct !== undefined && existingProduct !== null) {
       setCartItems(
@@ -41,7 +40,7 @@ const Restaurants = () => {
           };
         })
       );
-      toast.success(`Quantity of ${prod.pName} increased `)
+      toast.success(`Quantity of ${prod.name} increased `)
       
     } else {
       toast.success("New Prod added")
@@ -49,24 +48,46 @@ const Restaurants = () => {
       navigate('/cart')
     }
   }
+
+  const truncateText = (text, charLimit) => {
+    if (text.length <= charLimit) return text;
+  
+    // Truncate to the limit first
+    let truncated = text.slice(0, charLimit);
+  
+    if (charLimit > 90) {
+      const lastIndex = Math.max(
+        truncated.lastIndexOf(' '),
+        truncated.lastIndexOf('.'),
+        truncated.lastIndexOf(',')
+      );
+  
+      truncated = lastIndex > 0 ? truncated.slice(0, lastIndex) : truncated;
+    }
+    return truncated + '...';
+  };
   
   if(items){
     console.log(items)
   return (
     <div>
         <div className='menu-bg container pt-3'>
-          <Title heading={`All Products for Name add kar`}></Title>
+          <Title heading={`All Products for ${restName}`}></Title>
           {items.map((prod, idx) => {
             return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx}>
               <div className="card d-flex flex-lg-row mb-5">
-                <img src={prod.image} className="card-img-top img-fluid border-end prodImages" alt="..." />
+                <div style={{height:'280px'}}>
+              <img src={prod.image} className="prodImg" alt="..." />
+                </div>
                 <div className="card-body pt-1 pb-0">
                   <h4 className="card-title mt-0">{prod.name}</h4>
-                  <p className="text-secondary mb-2">{prod.description}</p>
+                  <div className='imgDiv'>
+                  <p className="text-secondary mb-2">{truncateText(prod.description, 200)}</p>
+                  </div>
                   <div>
                     <p className={`mb-0 badge rounded-pill bg-${prod.isAvailable ? 'success' : 'danger'}`}>{prod.isAvailable ? 'In-Stock' : 'Out of Stock'}</p>
                   </div>
-                  <p className="text-dark mt-3 fs-5 mb-0">Rs.{prod.price}</p>
+                  <p className="text-dark mt-2 fs-5 mb-0">Rs.{prod.price}</p>
                   <p className="badge bg-info text-dark fs-5 mt-2">{prod.category}</p>
                   {prod.size ? prod.size.map((items, index) => {
                     //work in progress

@@ -8,7 +8,7 @@ import Title from '../ReUsables/Title'
 
 //aur price bhi NAN hogi agr increase kii to kwke changeQuantity() me bhi unit price ni calc hogi 
 const Cart = () => {
-  const { cartItems, setCartItems } = useContext(MenuContext)
+  const { cartItems, setCartItems} = useContext(MenuContext)
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
 
@@ -23,7 +23,7 @@ const Cart = () => {
 
   const sum = items => { return items.reduce((prevVal, currVal) => prevVal + currVal, 0) }
   const removeItem = (id) => {
-    const filteredItems = cartItems.filter(cart => cart.pID !== id)
+    const filteredItems = cartItems.filter(cart => cart._id !== id)
     setCartItems(filteredItems)
   }
 
@@ -48,17 +48,17 @@ const Cart = () => {
     <div className='container pt-3'>
       <Title heading="Cart Page"></Title>
       {cartItems.length > 0 && <>
-        <table className="table table-striped table-responsive mt-5">
+        <table className="table table-striped table-responsive mt-5 ">
           <thead>
             <tr>
               <th scope="col">Quantity</th>
+              <th className='cartImg' scope="col">Image</th>
               <th scope="col">Name</th>
               <th scope="col">Price</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-
             {cartItems.map((item, idx) => {
               return <tr key={idx}>
                 <th scope="row">
@@ -75,23 +75,24 @@ const Cart = () => {
                     <option value="10">10</option>
                   </select>
                 </th>
+                <td className='cartImg'> <img style={{width:'150px',height:'90px'}} src={item.image} alt="" /></td>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
-                <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item.pID)}>Remove</button></td>
+                <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button></td>
               </tr>
             })}
           </tbody>
         </table>
-        <div className="d-flex justify-content-end me-4">
+        <div className="d-flex justify-content-end me-3">
           <h5 className='ms-auto'>Total Count:{totalCount}</h5>
         </div>
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end me-3">
           <h5 className='ms-auto'>Total Price:{totalPrice}</h5>
         </div>
       </>
       }
       {cartItems.length === 0 && <h2 className='text-center mt-5'>No Items in cart. <Link to='/menu'>Click to add!</Link> </h2>}
-      <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 me-2'>Go to Checkout</button></Link>
+      <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 me-4'>Go to Checkout</button></Link>
     </div>
   )
 }

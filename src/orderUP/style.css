@@ -105,14 +105,39 @@
 .options:hover {
     border: 3px solid rgb(101, 101, 244);
 }
-.prodImages{
-    width: 33%;
-    height: 269px;    
+
+.profile-orders:hover{
+    background-color: #f6c5c5;
+    border: 2px solid red !important;
 }
-@media screen and (max-width: 900px) {
-    .prodImages{
-        width: 70%;
-        margin: auto;
-        height: 350px;
-    } 
+.profile-main:hover{
+    background-color: #f8dada;
 }
+
+.prodImg{
+    width: 300px;
+    height: 100%;
+}
+.imgDiv{
+    height:70px
+}
+
+@media screen and (max-width: 992px) {
+    .prodImg{
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .imgDiv{
+        height:70px
+    }
+  }  
+  .table-container {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+  @media screen and (max-width: 500px) {
+  .cartImg{
+    display: none;
+  }}
