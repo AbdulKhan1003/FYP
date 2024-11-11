@@ -14,7 +14,7 @@ import { MenuContext } from '../AllRestaurants/RestaurantsContext';
 function LoginSignup() {
   const [action, setAction] = useState('Login')
   const [loading, setLoading] = useState(null);
-  const {user} = useContext(MenuContext)
+  const {user,setUser} = useContext(MenuContext)
   const nav = useNavigate()
 
   document.title = `Order Up - ${action} Page`
@@ -93,10 +93,11 @@ useEffect(()=>{
                 icon: "success"
               });
             console.log("SIGN IN LOG Data => ", data);
-            localStorage.setItem("User",JSON.stringify(data.user))
+            console.log("Data",data.user)
+            setUser(data.user)
             setLoading(false);
       
-            nav("/home")
+            // nav("/home")
           } catch (error) {
             Swal.fire({
               title: "Error",
@@ -170,6 +171,7 @@ useEffect(()=>{
               type="password"
               name="password"
               className='w-100'
+              autoComplete='current-password'
               value={formik.values.password}
               placeholder='Enter your password'
               onChange={formik.handleChange}

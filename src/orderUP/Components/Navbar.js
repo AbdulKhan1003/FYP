@@ -2,12 +2,14 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { MenuContext } from '../AllRestaurants/RestaurantsContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const {cartQuantity,user} = useContext(MenuContext)
   const userProfile = JSON.parse(localStorage.getItem("User"))
   const fullName = userProfile.name
-  const firstName = fullName.split(" ")[0]
+  // const firstName = fullName.split(" ")[0]
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-0 mx-2">
       <Link to="/home" className="navbar-brand fw-bold text-success m-0 p-0 ms-4">
@@ -32,7 +34,7 @@ function Navbar() {
             <Link to="/contact" className="nav-link text-dark mt-1 fs-5"><span className="nav-items">Contact</span></Link>
           </li>
           <li className="nav-itemfloat-end me-3">
-            <Link to="/cart" className="mt-2 btn position-relative"> <img src="/cart-logo.png" alt="Cart" />
+            <Link to="/cart" className="mt-2 btn position-relative"> <FontAwesomeIcon icon={faCartShopping} />
               <span className="position-absolute badge rounded-pill bg-danger">{cartQuantity.length?0:cartQuantity}</span>
             </Link>
           </li>
@@ -42,7 +44,7 @@ function Navbar() {
                 <i className="bi bi-person-fill"></i>
                 {/* full name or first name whatever you want here */}
                 <span>{userProfile===null || userProfile===undefined?"Guest":`${fullName}`}</span>
-                {console.log("user",user)}
+                {console.log("user",userProfile)}
               </button>
             </Link>
           </li>

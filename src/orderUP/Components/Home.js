@@ -5,6 +5,7 @@ import Choose from './Choose'
 import Dishes from './Dishes'
 import Customers from './Customers'
 import FAQ from './faq'
+import SimpleSteps from './SimpleSteps'
 
 const Home = () => {
 
@@ -16,13 +17,14 @@ const Home = () => {
         <div>
           <Hero />
           <Choose />
-          <Dishes />
+          <SimpleSteps />
+          {/* <Dishes /> */}
           <Customers />
           <FAQ />
 
           <section className="bg-success text-white py-5 my-5  ">
             <div className="container text-center">
-              <h2 className="display-6 fw-bold mb-3">Ready to Order?</h2>
+              <h3 className="display-6 fw-bold mb-3">Wanna order on mobile?</h3>
               <p className="lead mb-4">Download our app and start enjoying your favorite meals today!</p>
               <Link to="/appKaLink" className="btn btn-light text-success fw-bold px-4 py-2">Download Now</Link>
             </div>

@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react'
 import FAQ from './faq'
+import Dishes from './Dishes'
 
 
 const About = () => {
@@ -26,6 +27,8 @@ const About = () => {
           </center>
           </div>
         </div>
+
+        <Dishes />
 
         <div className="mt-5">
         <FAQ /> 

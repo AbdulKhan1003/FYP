@@ -141,3 +141,8 @@
   .cartImg{
     display: none;
   }}
+  .disabled-icon {
+    pointer-events: none;
+    opacity: 0.2;
+  }
+  

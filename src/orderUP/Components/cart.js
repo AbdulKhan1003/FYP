@@ -46,7 +46,7 @@ const Cart = () => {
 
   return (
     <div className='container pt-3'>
-      <Title heading="Cart Page"></Title>
+      <Title heading="Cart"></Title>
       {cartItems.length > 0 && <>
         <table className="table table-striped table-responsive mt-5 ">
           <thead>
@@ -59,6 +59,7 @@ const Cart = () => {
             </tr>
           </thead>
           <tbody>
+            {/* yaha bhi qty jab api me add hojaye ga to testing krke select ura daina haii agr issue kre  */}
             {cartItems.map((item, idx) => {
               return <tr key={idx}>
                 <th scope="row">

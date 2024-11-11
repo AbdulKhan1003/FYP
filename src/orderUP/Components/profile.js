@@ -4,12 +4,12 @@ import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 
 function Profile() {
   const userProfile = JSON.parse(localStorage.getItem("User"))
-  const pic = userProfile.profilePicture
   console.log("user prof" , userProfile)
   const nav = useNavigate()
-  const {setUser} = useContext(MenuContext)
+  const {setUser,setCartItems} = useContext(MenuContext)
   const handleLogout = () => {
     localStorage.setItem('LoggedIn', 0)
+    setCartItems([])
     setUser({})
     nav('/')
     window.location.reload();
