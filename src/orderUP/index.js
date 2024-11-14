@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import About from './Components/about';
 import Contact from './Components/contact';
@@ -15,11 +15,11 @@ import Profile from './Components/profile';
 import Checkout from './Components/checkout';
 
 const Index = () => {
-  const [loggedIn, setLoggedIn] = useState(null); 
+  const [loggedIn, setLoggedIn] = useState(null);
   let loggedVal = JSON.parse(localStorage.getItem('LoggedIn'));
 
   useEffect(() => {
-    setLoggedIn(loggedVal===0?false:true)
+    setLoggedIn(loggedVal === 0 ? false : true)
     // if (loggedVal === 0) {
     //   setLoggedIn(false);
     // } else {
@@ -28,7 +28,12 @@ const Index = () => {
   }, [loggedVal]);
 
   if (loggedIn === null) {
-    return <h1 className="text-center">Loading...</h1>  
+    // return <h1 className="text-center my-5 py-5">Loading the site...</h1>  
+    return <center>
+<div className="spinner-border mt-5" style={{width: "3rem",height: "3rem"}} role="status">
+  <span className="visually-hidden">Loading...</span>
+</div>
+    </center>
   }
 
   return (

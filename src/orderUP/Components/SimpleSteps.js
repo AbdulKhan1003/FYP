@@ -4,7 +4,7 @@ import Steps from '../ReUsables/Steps'
 
 const SimpleSteps = () => {
   return (
-    <section className="py-5">
+    <section className="py-5 steps-cont">
     <div className="container text-center">
       <Title heading="What to do!" size={6} />
       <div className="mt-5 row">

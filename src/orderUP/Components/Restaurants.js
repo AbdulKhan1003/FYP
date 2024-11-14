@@ -14,7 +14,7 @@ const Restaurants = () => {
   const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
   const navigate = useNavigate()
   const { items, fetchItems } =
-    useFetchItems(`http://192.168.1.10:8080/api/auth/restaurant/${restId}/items`);
+    useFetchItems(`http://192.168.1.14:8080/api/auth/restaurant/${restId}/items`);
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [blocking, setBlocking] = useState(false)
@@ -30,7 +30,6 @@ const Restaurants = () => {
   console.log("Items", items)
   useEffect(() => {
     console.log("Cart Items:", cartItems)
-    // localStorage.setItem('Cart Items', JSON.stringify(cartItems))
     setCartItems(cartItems)
   }, [cartItems])
 
@@ -64,13 +63,13 @@ const Restaurants = () => {
       })
     );
   };
-  
+
   const RemoveQty = (prodItem) => {
     const existingProduct = cartItems.find(item => item._id === prodItem._id);
     setCartItems(
       cartItems.map((item) => {
         if (existingProduct === item) {
-          if(item.quantity ===1){
+          if (item.quantity === 1) {
             setBlocking(true)
           }
           const unitPrice = item.price / (item.quantity || 1);
@@ -85,7 +84,7 @@ const Restaurants = () => {
       })
     );
   };
-  
+
 
   const AddProduct = (prod) => {
     const existingProduct = cartItems.find(item => item._id === prod._id);
@@ -106,16 +105,15 @@ const Restaurants = () => {
       );
       toast.success(`Quantity of ${prod.name} increased `);
     } else {
-      // Ensure new products have a quantity property
       const newProduct = {
         ...prod,
-        quantity: 1  // Initialize quantity to 1 for new products
+        quantity: 1 
       };
-      toast.success("New Prod added");
+      toast.success(`${prod.name} added `);
       setCartItems([...cartItems, newProduct]);
     }
   }
-  
+
 
   const truncateText = (text, charLimit) => {
     if (text.length <= charLimit) return text;
@@ -173,12 +171,12 @@ const Restaurants = () => {
                     </div>
                     <div className="offcanvas-body">
                       {cartItems.length > 0 && <>
-                      <hr />
+                        <hr />
                         <table className="table table-striped table-responsive mt-5 ">
                           <thead>
                             <tr>
                               <th scope="col">Name</th>
-                              <th scope='col'>Quantity</th> 
+                              <th scope='col'>Quantity</th>
                               <th scope="col">Price</th>
                               <th scope="col">Action</th>
                             </tr>
@@ -186,9 +184,9 @@ const Restaurants = () => {
                           <tbody>
                             {cartItems.map((item, idx) => {
                               return <tr key={idx}>
-                                <td style={{width:'30%'}}>{item.name}</td>
+                                <td style={{ width: '30%' }}>{item.name}</td>
                                 <td><FontAwesomeIcon className={`px-2 ${item.quantity <= 1 ? 'disabled-icon' : ''}`} icon={faMinus} style={{ color: 'red' }} onClick={() => { if (item.quantity > 1) RemoveQty(item); }} />
-                                  <span className='fs-6 mx-1'>{item.quantity?item.quantity:1}</span>
+                                  <span className='fs-6 mx-1'>{item.quantity ? item.quantity : 1}</span>
                                   <FontAwesomeIcon className='px-2' icon={faPlus} style={{ color: 'green' }} onClick={() => { AddQty(item) }} /></td>
                                 <td>{item.price}</td>
                                 <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button></td>
@@ -202,12 +200,12 @@ const Restaurants = () => {
                         <div className="d-flex justify-content-end me-3">
                           <h5 className='ms-auto'>Total Price:{totalPrice}</h5>
                         </div>
-                        <button className='btn btn-success w-100 mt-3' color='success' onClick={()=>{ navigate("/checkout")}}>Checkout</button>
+                        <button className='btn btn-success w-100 mt-3' color='success' onClick={() => { navigate("/checkout") }}>Checkout</button>
                       </>
                       }
                       {cartItems.length === 0 && <>
-                      <hr />
-                      <h3 className="text-center mt-4">No Items in Cart</h3>
+                        <hr />
+                        <h3 className="text-center mt-4">No Items in Cart</h3>
                       </>}
                     </div>
                   </div>
@@ -221,7 +219,9 @@ const Restaurants = () => {
       </div>
     )
   } else {
-    return <h1 className="text-center">Fetching Products...</h1>
+    return  <div className='container pt-3'>
+      <h1 className="text-center">Fetching Products...</h1>
+    </div>
   }
 }
 

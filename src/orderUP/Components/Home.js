@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Hero from './hero'
 import Choose from './Choose'
-import Dishes from './Dishes'
 import Customers from './Customers'
 import FAQ from './faq'
 import SimpleSteps from './SimpleSteps'
@@ -18,11 +17,10 @@ const Home = () => {
           <Hero />
           <Choose />
           <SimpleSteps />
-          {/* <Dishes /> */}
           <Customers />
           <FAQ />
 
-          <section className="bg-success text-white py-5 my-5  ">
+          <section className="bg-success text-white mt-5 py-5">
             <div className="container text-center">
               <h3 className="display-6 fw-bold mb-3">Wanna order on mobile?</h3>
               <p className="lead mb-4">Download our app and start enjoying your favorite meals today!</p>

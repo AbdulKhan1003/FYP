@@ -93,7 +93,7 @@ const Cart = () => {
       </>
       }
       {cartItems.length === 0 && <h2 className='text-center mt-5'>No Items in cart. <Link to='/menu'>Click to add!</Link> </h2>}
-      <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 me-4'>Go to Checkout</button></Link>
+      <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 mb-5 me-4'>Go to Checkout</button></Link>
     </div>
   )
 }

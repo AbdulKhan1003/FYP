@@ -85,14 +85,15 @@
 }
 
 .bg-img {
-    background: url('../../../public/login-page2.jpeg') no-repeat center center;
+    background: url('../../../public/login.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
 }
 
 .bg-form {
-    background-color: rgba(0, 0, 0, 0.76);
+    background-color: rgba(0, 0, 0, 0.2); 
 }
+
 
 .feedback-form {
     width: 80%;

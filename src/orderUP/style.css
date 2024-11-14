@@ -15,23 +15,28 @@
     padding-bottom: 8px;
     border-bottom: 2px solid gray;
 }
-.review-bg{
-    background-color: rgb(213, 213, 213);
-}
 .review-img{
     border: 4px solid rgb(87, 87, 247);
 }
 .transition-box {
-    transition: transform 1s ease;
+    transition: transform 1.2s ease;
 }
 
 .transition-box:hover {
     transform: scale(1.1);
-    border: 2px solid springgreen;
+    border: 3px solid springgreen;
 }
 .menu-bg{
-    background-color: rgb(226, 252, 252);
+    background-color: rgba(41, 245, 164, 0.1);
 }
+.options {
+    transition: transform 0.1s ease, border 0.2s ease;
+  }
+  
+  .options:hover {
+    border: 3px solid rgb(7, 40, 254);
+  }
+  
 .contact-bg{
     background-color: rgb(169, 251, 223);
     width: 40vw;
@@ -73,7 +78,7 @@
 }
   @media screen and (min-width: 1100px) and (max-width: 1600px) {
     .about-img{
-        height: 50vh;
+        height: 80vh;
     }
     .para{
         font-size: 20px !important;
@@ -102,16 +107,10 @@
         margin-right: 10%;
     }
   }  
-.options:hover {
-    border: 3px solid rgb(101, 101, 244);
-}
 
 .profile-orders:hover{
-    background-color: #f6c5c5;
-    border: 2px solid red !important;
-}
-.profile-main:hover{
-    background-color: #f8dada;
+    background-color: #fce4e4;
+    border: 2px solid rgba(255, 0, 0,0.3) !important;
 }
 
 .prodImg{
@@ -144,5 +143,54 @@
   .disabled-icon {
     pointer-events: none;
     opacity: 0.2;
+  }
+  
+  .choose-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg1.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 70vh;
+    color: white; 
+  }
+  .steps-cont {
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg5.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
+  }
+  .cust-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg4.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
+  }
+  .faq-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg3.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
+  }
+  .about-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/bg-3.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
+  }
+  .register-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/bg-1.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
   }
   

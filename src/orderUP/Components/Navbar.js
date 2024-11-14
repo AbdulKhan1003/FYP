@@ -6,16 +6,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
-  const {cartQuantity,user} = useContext(MenuContext)
+  const {cartQuantity} = useContext(MenuContext)
   const userProfile = JSON.parse(localStorage.getItem("User"))
   const fullName = userProfile.name
   // const firstName = fullName.split(" ")[0]
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-0 mx-2">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm mx-2">
       <Link to="/home" className="navbar-brand fw-bold text-success m-0 p-0 ms-4">
-        <img style={{ width: '100px', height: '80px' }} src="/main-logo.png" alt="Logo" />
+        <img style={{ width: '55px', height: '50px', borderRadius:'50%' }} src="/logo1.jpg" alt="Logo" />
       </Link>
-      <Link to="/home" className="navbar-brand fw-bold text-success">ORDER UP!</Link>
+      <Link to="/home" className="navbar-brand fw-bold text-success ms-2">ORDER UP!</Link>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>

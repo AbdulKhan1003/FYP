@@ -4,7 +4,7 @@ import Title from '../ReUsables/Title'
 export default function FAQ() {
 
     return (
-        <section className="banner-section overflow-hidden">
+        <section className="banner-section overflow-hidden faq-cont py-5">
             <div className="container mw-1470">
                 <div className="pt-2 px-2">
                     <Title heading="Frequently Asked Questions"></Title>

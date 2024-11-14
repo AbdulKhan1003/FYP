@@ -4,7 +4,7 @@ import Slider from '../ReUsables/Slider'
 
 const Customers = () => {
   return (
-    <section className="py-5">
+    <section className="py-5 cust-cont">
     <div className="text-center">
       <Title heading="What Our Customers Say" size={6} />
       <div id="carouselExampleIndicators" className="carousel slide mt-5" data-bs-ride="carousel">

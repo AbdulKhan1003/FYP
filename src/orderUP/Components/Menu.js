@@ -6,18 +6,18 @@ import { useFetchRestaurants } from '../hooks/useFetchRestaurants'
 
 
 const Menu = () => {
-  const {setRestId,setRestName } = useContext(MenuContext)
+  const { setRestId, setRestName } = useContext(MenuContext)
   useEffect(() => {
     document.title = "ORDER UP - Menu"
   })
 
-  const restNameAndID = (id,name) =>{
+  const restNameAndID = (id, name) => {
     setRestId(id)
     setRestName(name)
   }
 
   const { restaurants, fetchRestaurants } =
-    useFetchRestaurants("http://192.168.1.10:8080/api/auth/restaurants");
+    useFetchRestaurants("http://192.168.1.14:8080/api/auth/restaurants");
 
   const fetchData = async () => {
     await fetchRestaurants();
@@ -32,7 +32,7 @@ const Menu = () => {
       <div className='menu-bg container pt-3'>
         <Title heading="All Restaurants"></Title>
         {restaurants?.map((restaurantItems, idx) => {
-          return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx} onClick={() =>{restNameAndID(restaurantItems._id, restaurantItems.name)}}>
+          return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx} onClick={() => { restNameAndID(restaurantItems._id, restaurantItems.name) }}>
             <Link to={`../restaurant/${restaurantItems._id}/items`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="card d-flex flex-lg-row mb-5 options">
                 <img src={restaurantItems.thumbnail} className="card-img-top img-fluid" alt="..." />
@@ -58,7 +58,9 @@ const Menu = () => {
       </div>
     )
   } else {
-    return <h1 className="text-center">Fetching Restaurants...</h1>
+    return <div className='container pt-3'>
+      <h1 className="text-center">Fetching Restaurants...</h1>
+    </div>
   }
 
 }

@@ -4,7 +4,7 @@ import WhyChoose from '../ReUsables/WhyChoose'
 
 const Choose = () => {
   return (
-    <section className="py-5">
+    <section className="py-5 choose-cont">
     <div className="container text-center">
       <Title heading="Why Choose ORDER UP!" size={6} />
       <div className="mt-5 row">
