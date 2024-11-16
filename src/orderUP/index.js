@@ -13,6 +13,7 @@ import LoginSignup from './Authentication/LoginSignup'
 import './Authentication/LoginSignup.css'
 import Profile from './Components/profile';
 import Checkout from './Components/checkout';
+import OrderPlaced from './Components/orderPlaced';
 
 const Index = () => {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -53,11 +54,12 @@ const Index = () => {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/orderComplete" element={<OrderPlaced />} />
               <Route path="*" element={<Home />} />
             </Routes>
+            <Footer />
           </div>
         )}
-        <Footer />
       </div>
     </Router>
   );

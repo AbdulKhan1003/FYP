@@ -4,7 +4,7 @@ import PopularDishes from '../ReUsables/PopularDishes'
 
 const Dishes = () => {
   return (
-    <section className="bg-light py-5">
+    <section className="bg-light py-5 dishes-cont">
     <div className="container text-center">
       <Title heading="Popular Dishes" size={6} />
       <div className="row mt-5">

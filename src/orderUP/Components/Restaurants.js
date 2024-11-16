@@ -14,10 +14,9 @@ const Restaurants = () => {
   const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
   const navigate = useNavigate()
   const { items, fetchItems } =
-    useFetchItems(`http://192.168.1.14:8080/api/auth/restaurant/${restId}/items`);
+    useFetchItems(`http://192.168.1.10:8080/api/auth/restaurant/${restId}/items`);
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const [blocking, setBlocking] = useState(false)
 
   document.title = "ORDER UP - Products"
 
@@ -70,7 +69,6 @@ const Restaurants = () => {
       cartItems.map((item) => {
         if (existingProduct === item) {
           if (item.quantity === 1) {
-            setBlocking(true)
           }
           const unitPrice = item.price / (item.quantity || 1);
           return {
@@ -150,7 +148,7 @@ const Restaurants = () => {
                     <p className="text-secondary mb-2">{truncateText(prod.description, 200)}</p>
                   </div>
                   <div>
-                    <p className={`mb-0 badge rounded-pill bg-${prod.isAvailable ? 'success' : 'danger'}`}>{prod.isAvailable ? 'In-Stock' : 'Out of Stock'}</p>
+                    <p className={`mb-0 badge rounded-pill bg-${prod.availability ? 'success' : 'danger'}`}>{prod.availability ? 'In-Stock' : 'Out of Stock'}</p>
                   </div>
                   <p className="text-dark mt-2 fs-5 mb-0">Rs.{prod.price}</p>
                   <p className="badge bg-info text-dark fs-5 mt-2">{prod.category}</p>
@@ -219,8 +217,11 @@ const Restaurants = () => {
       </div>
     )
   } else {
-    return  <div className='container pt-3'>
-      <h1 className="text-center">Fetching Products...</h1>
+    return <div className='container pt-3 d-flex justify-content-center flex-column align-items-center'>
+      <h1 className="mb-5">Fetching Products...</h1>
+      <div className="spinner-border big-spinner mt-5" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
     </div>
   }
 }

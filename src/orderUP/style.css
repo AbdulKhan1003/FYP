@@ -1,6 +1,14 @@
 *{
     font-family: "Roboto",sans-serif;
 }
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -8,8 +16,15 @@
 }
 
 .content {
-  flex: 1; /* Allow content to grow and take up available space */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
+
+footer {
+  margin-top: auto;
+}
+
 
 .nav-items:hover {
     padding-bottom: 8px;
@@ -36,10 +51,14 @@
   .options:hover {
     border: 3px solid rgb(7, 40, 254);
   }
-  
+  .contact-page{
+    background-image: url("https://media.istockphoto.com/id/1184300317/photo/pink-marble-texture-background-abstract-marble-texture-for-design.jpg?s=612x612&w=0&k=20&c=J1ISveeedUT7m1GCBqNSfSLwEJVMdyzVEnWZnlYa2L4=");
+  }
 .contact-bg{
-    background-color: rgb(169, 251, 223);
+    border: 1px solid black;
+    box-shadow: 3px 5px ;
     width: 40vw;
+    background-color: white;
 }
 @media screen and (max-width:1100px) {
     .contact-bg{
@@ -147,7 +166,7 @@
   
   .choose-cont{
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg1.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/home-bg1.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 70vh;
@@ -155,7 +174,7 @@
   }
   .steps-cont {
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg5.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/home-bg5.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 80vh;
@@ -163,7 +182,7 @@
   }
   .cust-cont{
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg4.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/home-bg4.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 80vh;
@@ -171,7 +190,7 @@
   }
   .faq-cont{
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/home-bg3.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/bg-7.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 80vh;
@@ -179,7 +198,7 @@
   }
   .about-cont{
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/bg-3.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('/public/images/bg-3.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 80vh;
@@ -187,10 +206,65 @@
   }
   .register-cont{
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/bg-1.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/bg-1.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
     height: 80vh;
     color: rgb(255, 255, 255);
   }
-  
+  .dishes-cont{
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/bg-6.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 80vh;
+    color: rgb(255, 255, 255);
+  }
+  .emptyCart img{
+    width: min(400px,80%);
+    height: 10%;
+  }
+
+  /* Make the spinner larger */
+.big-spinner {
+  width: 100px; /* Adjust the size as needed */
+  height: 100px; /* Adjust the size as needed */
+  border-width: 10px; /* Adjust the border size */
+}
+@media screen and (max-width: 1099px) {
+ .order-biliing{
+  border: 1px solid black;
+  margin-bottom: 20px;
+ }  
+ .order-details {
+  width: 77%;
+  position: relative;
+  left: 14%;
+  margin-bottom: 20px;
+}
+}
+.orderPlaced {
+  background: url(/public/images/placedOrder-bg.jpg) no-repeat center center;
+  background-size: cover;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 50%;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  text-align: center;
+}
+

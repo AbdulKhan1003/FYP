@@ -24,12 +24,12 @@ export default function FAQ() {
                         <div className="accordion-item mb-3">
                             <h2 className="accordion-header shadow-faq" id="headingFour">
                                 <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    <strong className='fs-5'>Do you offer special deals or discounts?</strong>
+                                    <strong className='fs-5'>What are your delivery charges for different locations?</strong>
                                 </button>
                             </h2>
                             <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
                                 <div className="accordion-body border" style={{ lineHeight: '30px', textAlign: 'left' }}>
-                                    Yes, we regularly offer special deals, discounts, and promotional offers for our customers. Keep an eye on our app or website for the latest deals on your favorite meals from top restaurants and local vendors.
+                                    We have a standard delivery fee of Rs.50 no matter how close or how far you are. As long as you are willing to order, we are willing to deliver.
                                 </div>
                             </div>
                         </div>

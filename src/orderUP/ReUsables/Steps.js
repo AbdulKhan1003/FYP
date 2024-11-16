@@ -5,7 +5,7 @@ const Steps = (props) => {
     <div className="col-md-4 mb-4">
     <div className="card h-100 transition-box">
         <center>
-            <h2 className='text-success'>Step {props.stepNo}:</h2>
+            <h2 className='text-success mt-2'>Step {props.stepNo}:</h2>
         </center>
         <hr className='m-0 p-0' />
       <div className="card-body">

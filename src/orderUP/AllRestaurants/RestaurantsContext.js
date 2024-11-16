@@ -10,6 +10,7 @@ const RestaurantsContext = (props) => {
     const [restName, setRestName] = useState(null)
     const [restId, setRestId] =useState(null)
     const [cartQuantity, setCartQuantity] = useState(0)
+    const [page, setPage] =  useState(null)
     const [user, setUser] = useState(
         JSON.parse(localStorage.getItem('User')) || {}
       );
@@ -27,7 +28,7 @@ const RestaurantsContext = (props) => {
 
 
     return (
-        <MenuContext.Provider value={{cartItems, setCartItems,restName, setRestName, restId,setRestId, cartQuantity,setCartQuantity, user,setUser}}>
+        <MenuContext.Provider value={{cartItems, setCartItems,restName, setRestName, restId,setRestId, cartQuantity,setCartQuantity, user,setUser, page,setPage}}>
             {props.children}
         </MenuContext.Provider>
     );

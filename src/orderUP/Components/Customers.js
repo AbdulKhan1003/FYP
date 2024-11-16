@@ -9,9 +9,9 @@ const Customers = () => {
       <Title heading="What Our Customers Say" size={6} />
       <div id="carouselExampleIndicators" className="carousel slide mt-5" data-bs-ride="carousel">
       <div className="carousel-inner">
-      <Slider active="active" imgSrc="users/user-1.jpg" name="Karen" review="Although, i am a Karen and my only job is to find mistakes in everthing, this website looks kinda interesting. I ordered haleem through recommendations and it was yumm." />
-      <Slider active="" imgSrc="users/user-2.jpg" name="Nusrat(Salt Bae)" review="Great website if you want to order food. Almost every food was available. I wish my restaurant can be added in someday." />
-      <Slider active="" imgSrc="users/user-3.jpg" name="Nigga 3" review="Yummy chicken. Ate like 69 pieces of it from 10 different places. Good website. Definitely recommended y'all." />
+      <Slider active="active" imgSrc="users/user-1.jpg" name="Karen" review="I was surprised to see delivery charges so low, just Rs. 50! The food came on time, fresh and hot. Great service and affordable too." />
+      <Slider active="" imgSrc="users/user-2.jpg" name="Babar" review="Ice Cream achi thi aur sab kuch aik hi jaga me mil gya. Best haii 👍" />
+      <Slider active="" imgSrc="users/user-3.jpg" name="Kevin" review="Tried their pizza, and wow, it was loaded with cheese and toppings. Crust was perfect, and delivery was fast. Definitely ordering again." />
       </div>
       <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                 <span className="carousel-control-prev-icon bg-black" aria-hidden="true"></span>

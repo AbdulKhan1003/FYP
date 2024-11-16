@@ -16,11 +16,11 @@ function App() {
       console.log("'Cart Items' already set:", cartItems);
     }
 
-    // Initialize other keys
+    // Initialize Login
     if (!localStorage.getItem('LoggedIn')) {
       localStorage.setItem('LoggedIn', 0);
     }
-
+    //Initialize User
     if (!localStorage.getItem('User') || localStorage.getItem('User') === 'null') {
       localStorage.setItem('User', JSON.stringify({}));
     }

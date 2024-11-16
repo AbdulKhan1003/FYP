@@ -17,7 +17,7 @@ const Menu = () => {
   }
 
   const { restaurants, fetchRestaurants } =
-    useFetchRestaurants("http://192.168.1.14:8080/api/auth/restaurants");
+    useFetchRestaurants("http://192.168.1.10:8080/api/auth/restaurants");
 
   const fetchData = async () => {
     await fetchRestaurants();
@@ -58,8 +58,11 @@ const Menu = () => {
       </div>
     )
   } else {
-    return <div className='container pt-3'>
-      <h1 className="text-center">Fetching Restaurants...</h1>
+    return <div className='container pt-3 d-flex justify-content-center flex-column align-items-center'>
+      <h1 className="mb-5">Fetching Restaurants...</h1>
+      <div className="spinner-border big-spinner mt-5" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
     </div>
   }
 
