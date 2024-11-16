@@ -3,12 +3,14 @@ import BreadCrumbs from '../ReUsables/BreadCrumbs'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import { useFormik } from "formik";
 import * as Yup from 'yup'
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { Label, Form, Input, FormFeedback } from "reactstrap";
 import Swal from 'sweetalert2';
 
 function Checkout() {
-  const { cartItems, setPage } = useContext(MenuContext)
+  const navigate = useNavigate()
+  const { cartItems, setPage, setCartItems } = useContext(MenuContext)
   useEffect(() => {
     document.title = "ORDER UP - Checkout"
     setPage("Checkout")
@@ -45,7 +47,7 @@ function Checkout() {
       data.append('email', values.email);
       data.append('number', values.number);
       data.append('address', values.address);
-      data.append('Order', cartItems)
+      data.append('Order', cartItems.map(item => item.name).join('\n'));
       data.append("access_key", "5f7651c2-7a4a-4676-b9dc-df9460a25ad5");
 
       const json = JSON.stringify(Object.fromEntries(data));
@@ -64,6 +66,8 @@ function Checkout() {
           text: "Order Placed",
           icon: "success"
         });
+        navigate("/orderComplete")
+        setCartItems([])
       }
       console.log(res)
     }
