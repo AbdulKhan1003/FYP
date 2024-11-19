@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import BreadCrumbs from '../ReUsables/BreadCrumbs'
-
-// API me quantity ni haii isliye total count NAN haii. Fix 
-//quanity increase ya select me barhao ge to parameter aik add hojaye ga temporairly
-
-//aur price bhi NAN hogi agr increase kii to kwke changeQuantity() me bhi unit price ni calc hogi 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import ScrollToTopButton from '../ReUsables/ScrollToTopButton';
 const Cart = () => {
   const { cartItems, setCartItems, setPage } = useContext(MenuContext)
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
+  const navigate = useNavigate()
 
   document.title = "ORDER UP - Cart"
   useEffect(() => {
@@ -44,57 +43,83 @@ const Cart = () => {
     setCartItems(updatedCartItems);
   };
 
+  const groupedItems = cartItems.reduce((groups, item) => {
+    const { restName } = item;
+    if (!groups[restName]) {
+      groups[restName] = [];
+    }
+    groups[restName].push(item);
+    return groups;
+  }, {});
+
+  const removeProductsByRestName = (restName) => {
+    setCartItems(cartItems.filter(item => item.restName !== restName));
+  }
+
 
   return (
-    <>
+    <div className="mt-5">
       <BreadCrumbs />
-      <div className='container pt-3'>
-        {/* <Title heading="Cart"></Title> */}
-        {cartItems.length > 0 && <>
-          <table className="table table-striped table-responsive mt-5 ">
-            <thead>
-              <tr>
-                <th scope="col">Quantity</th>
-                <th className='cartImg' scope="col">Image</th>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* yaha bhi qty jab api me add hojaye ga to testing krke select ura daina haii agr issue kre  */}
-              {cartItems.map((item, idx) => {
-                return <tr key={idx}>
-                  <th scope="row">
-                    <select defaultValue={item.quantity} className="form-select-sm" aria-label=".form-select-sm example" onChange={e => changeQuantity(item, Number(e.target.value))}>
-                      <option value='1'>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                    </select>
-                  </th>
-                  <td className='cartImg'> <img style={{ width: '150px', height: '90px' }} src={item.image} alt="" /></td>
-                  <td>{item.name}</td>
-                  <td>{item.price}</td>
-                  <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button></td>
-                </tr>
-              })}
-            </tbody>
-          </table>
-          <div className="d-flex justify-content-end me-3">
-            <h5 className='ms-auto'>Total Count:{totalCount}</h5>
+      {Object.entries(groupedItems).map(([restName, items]) => (
+        <div key={restName} className="card mb-5 container">
+          <div className="card-header d-flex">
+            <b className='ms-3 fs-4'>{restName}</b>
+            <div className='ms-auto me-5 mt-2'>
+              <FontAwesomeIcon className='fa-xl me-5'
+                onClick={() => { removeProductsByRestName(restName) }} icon={faTrash} style={{ color: 'red', cursor: 'pointer' }} />
+            </div>
           </div>
-          <div className="d-flex justify-content-end me-3">
-            <h5 className='ms-auto'>Total Price:{totalPrice}</h5>
+          <div className="card-body p-0">
+            {items.map((item, idx) => (
+              <div key={idx} className="row">
+                <div className="col-2 cartQty d-flex justify-content-center align-items-center">
+                  <select
+                    defaultValue={item.quantity}
+                    className="form-select-sm"
+                    aria-label=".form-select-sm example"
+                    onChange={e => changeQuantity(item, Number(e.target.value))}
+                  >
+                    {[...Array(10)].map((_, i) => (
+                      <option key={i} value={i + 1}>{i + 1}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-3 cartImg py-3">
+                  <img style={{ width: '150px', height: '90px' }} src={item.image} alt={item.name} />
+                </div>
+
+                <div className="col-2 cartName d-flex justify-content-start align-items-center">
+                  <div>{item.name}</div>
+                </div>
+
+                <div className="col-2 cartPrice d-flex justify-content-center align-items-center">
+                  <div><b>Rs. {item.price}</b></div>
+                </div>
+
+                <div className="col-3 cartRem d-flex justify-content-center align-items-center">
+                  <button className="btn btn-sm rounded-pill btn-outline-danger" onClick={() => removeItem(item._id)}>
+                    Remove
+                  </button>
+                </div>
+                <hr />
+              </div>
+            ))}
           </div>
-        </>
-        }
+          <div className="d-flex">
+            <div className='ms-auto me-2 mb-2'>
+              <b className="me-5 fs-5">Subtotal: Rs. {sum(items.map(item => item.price))}</b>
+            </div>
+          </div>
+        </div>
+      ))}
+      <div className='container'>
+        <div className="d-flex justify-content-end me-3">
+          <h5 className='ms-auto text-bold fw-bold'>Total Count:{totalCount}</h5>
+        </div>
+        <div className="d-flex justify-content-end me-3">
+          <h5 className='ms-auto text-bold fw-bold'>Total Price:{totalPrice}</h5>
+        </div>
         {cartItems.length === 0 &&
           <>
             <div className='emptyCart'>
@@ -106,9 +131,11 @@ const Cart = () => {
           </>}
         {cartItems.length !== 0 && <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 mb-5 me-4'>Go to Checkout</button></Link>}
       </div>
+      <ScrollToTopButton />
+    </div>
 
-    </>
-  )
+  );
+
 }
 
 

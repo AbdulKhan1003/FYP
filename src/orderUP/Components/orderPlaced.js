@@ -1,5 +1,6 @@
 import React,{useContext, useEffect} from 'react'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
+import BreadCrumbs from '../ReUsables/BreadCrumbs'
 
 const OrderPlaced = () => {
     const {setPage} = useContext(MenuContext)
@@ -8,6 +9,7 @@ const OrderPlaced = () => {
         setPage("OrderPlaced")
       }, [])
   return (
+    <>
     <div className='orderPlaced'>
         <div className="order-box">
             <div className="box d-flex flex-column align-items-center">
@@ -17,6 +19,7 @@ const OrderPlaced = () => {
             </div>
         </div>
     </div>
+    </>
   )
 }
 

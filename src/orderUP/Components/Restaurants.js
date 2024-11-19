@@ -26,6 +26,9 @@ const Restaurants = () => {
   useEffect(() => {
     fetchItemData();
   }, []);
+  console.log("hi")
+  console.log("Name",restName)
+  console.log('Id',restId)
   console.log("Items", items)
   useEffect(() => {
     console.log("Cart Items:", cartItems)
@@ -84,9 +87,10 @@ const Restaurants = () => {
   };
 
 
-  const AddProduct = (prod) => {
+  const AddProduct = (prod, newRestId, newRestName) => {
     const existingProduct = cartItems.find(item => item._id === prod._id);
-    if (existingProduct !== undefined && existingProduct !== null) {
+    
+    if (existingProduct) {
       setCartItems(
         cartItems.map((item) => {
           if (existingProduct === item) {
@@ -95,6 +99,7 @@ const Restaurants = () => {
               ...item,
               quantity: item.quantity ? item.quantity + 1 : 1,
               price: item.price + unitPrice
+              // Do not update restId and restName for existing products
             };
           } else {
             return item;
@@ -105,13 +110,15 @@ const Restaurants = () => {
     } else {
       const newProduct = {
         ...prod,
-        quantity: 1 
+        quantity: 1,
+        restId: restId,
+        restName: restName
       };
       toast.success(`${prod.name} added `);
       setCartItems([...cartItems, newProduct]);
     }
-  }
-
+  };
+  
 
   const truncateText = (text, charLimit) => {
     if (text.length <= charLimit) return text;
@@ -157,7 +164,7 @@ const Restaurants = () => {
                     return <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
                   }) : ''}
                   <br />
-                  <Button type='button' className='' color='primary' outline data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onClick={() => AddProduct(prod)}>Add to Cart</Button>
+                  <Button type='button' className='mb-3' color='primary' outline data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onClick={() => AddProduct(prod)}>Add to Cart</Button>
 
                   <div className="offcanvas offcanvas-end " tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                     <div className="offcanvas-header text-center">

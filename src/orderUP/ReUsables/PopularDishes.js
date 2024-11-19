@@ -3,7 +3,7 @@ import React from 'react'
 const PopularDishes = (props) => {
   return (
     <div className="col-md-4 mb-4">
-    <div className="card h-100 transition-box">
+    <div className="card h-100 transition-box popular-box">
         <center>
       <img src={`${props.imgSrc}`} alt="Food" className="card-img-top img-fluid mt-2" style={{height:'170px',width:'50%'}} />
         </center>

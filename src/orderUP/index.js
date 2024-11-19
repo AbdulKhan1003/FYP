@@ -30,11 +30,11 @@ const Index = () => {
 
   if (loggedIn === null) {
     // return <h1 className="text-center my-5 py-5">Loading the site...</h1>  
-    return <center>
-<div className="spinner-border mt-5" style={{width: "3rem",height: "3rem"}} role="status">
-  <span className="visually-hidden">Loading...</span>
-</div>
-    </center>
+    return <div className='container pt-3 d-flex justify-content-center flex-column align-items-center mb-5'>
+    <div className="spinner-border big-spinner mt-5" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  </div>
   }
 
   return (

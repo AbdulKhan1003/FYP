@@ -3,6 +3,7 @@ import Title from '../ReUsables/Title'
 import { Link } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import { useFetchRestaurants } from '../hooks/useFetchRestaurants'
+import ScrollToTopButton from '../ReUsables/ScrollToTopButton'
 
 
 const Menu = () => {
@@ -54,7 +55,7 @@ const Menu = () => {
             </Link>
           </div>
         })}
-
+          <ScrollToTopButton />
       </div>
     )
   } else {
