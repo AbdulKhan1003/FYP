@@ -26,10 +26,6 @@ const Restaurants = () => {
   useEffect(() => {
     fetchItemData();
   }, []);
-  console.log("hi")
-  console.log("Name",restName)
-  console.log('Id',restId)
-  console.log("Items", items)
   useEffect(() => {
     console.log("Cart Items:", cartItems)
     setCartItems(cartItems)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import About from './Components/about';
@@ -14,10 +14,12 @@ import './Authentication/LoginSignup.css'
 import Profile from './Components/profile';
 import Checkout from './Components/checkout';
 import OrderPlaced from './Components/orderPlaced';
+import { MenuContext } from './AllRestaurants/RestaurantsContext';
 
 const Index = () => {
   const [loggedIn, setLoggedIn] = useState(null);
   let loggedVal = JSON.parse(localStorage.getItem('LoggedIn'));
+  const {order} =useContext(MenuContext)
 
   useEffect(() => {
     setLoggedIn(loggedVal === 0 ? false : true)
@@ -54,7 +56,8 @@ const Index = () => {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/orderComplete" element={<OrderPlaced />} />
+              {order && <Route path="/orderComplete" element={<OrderPlaced />} />}
+              {!order && <Route path="/orderComplete" element={<Menu />} />}
               <Route path="*" element={<Home />} />
             </Routes>
             <Footer />

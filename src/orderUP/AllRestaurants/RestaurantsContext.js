@@ -14,6 +14,7 @@ const RestaurantsContext = (props) => {
     const [user, setUser] = useState(
         JSON.parse(localStorage.getItem('User')) || {}
       );
+    const [order, setOrder] = useState(false)
       
 
     useEffect(() => {
@@ -28,7 +29,8 @@ const RestaurantsContext = (props) => {
 
 
     return (
-        <MenuContext.Provider value={{cartItems, setCartItems,restName, setRestName, restId,setRestId, cartQuantity,setCartQuantity, user,setUser, page,setPage}}>
+        <MenuContext.Provider value={{cartItems, setCartItems,restName, setRestName, restId,setRestId, 
+        cartQuantity,setCartQuantity, user,setUser, page,setPage, order,setOrder}}>
             {props.children}
         </MenuContext.Provider>
     );

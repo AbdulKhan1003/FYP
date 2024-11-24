@@ -13,7 +13,7 @@ function App() {
       console.log("Initializing 'Cart Items' as an empty array");
       localStorage.setItem('Cart Items', JSON.stringify([]));
     } else {
-      console.log("'Cart Items' already set:", cartItems);
+      console.log("'Cart Items' already set");
     }
 
     // Initialize Login
