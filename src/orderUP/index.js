@@ -23,15 +23,9 @@ const Index = () => {
 
   useEffect(() => {
     setLoggedIn(loggedVal === 0 ? false : true)
-    // if (loggedVal === 0) {
-    //   setLoggedIn(false);
-    // } else {
-    //   setLoggedIn(true);
-    // }
   }, [loggedVal]);
 
   if (loggedIn === null) {
-    // return <h1 className="text-center my-5 py-5">Loading the site...</h1>  
     return <div className='container pt-3 d-flex justify-content-center flex-column align-items-center mb-5'>
     <div className="spinner-border big-spinner mt-5" role="status">
       <span className="visually-hidden">Loading...</span>

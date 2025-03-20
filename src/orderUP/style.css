@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@500&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
   font-family: "Poppins", sans-serif;
 }
@@ -7,6 +9,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow-x: hidden;
 }
 
 .app {
@@ -25,6 +28,13 @@ footer {
   margin-top: auto;
 }
 
+.logo-img {
+  width: 70px;
+  height: 65px;
+  border-radius: 50%;
+  position: relative;
+  top: 50%;
+}
 
 .nav-items:hover {
   padding-bottom: 8px;
@@ -37,9 +47,11 @@ footer {
 
 .transition-box {
   width: 95%;
+  height: 100%;
   margin: 0px auto;
   transition: transform 1.2s ease;
 }
+
 @media screen and (max-width:760px) {
   .transition-box {
     width: 75%;
@@ -52,22 +64,76 @@ footer {
   border: 3px solid springgreen;
 }
 
+.team-image {
+  width: 15vw;
+  align-self: center;
+}
+
 .menu-bg {
-  background-color: rgba(41, 245, 164, 0.1);
+  background-color: rgba(86, 243, 180, 0.2);
 }
 
 .options {
-  transition: transform 0.1s ease, border 0.2s ease;
+  transition: transform 0.4s ease, box-shadow 0.3s ease;
 }
 
 .options:hover {
-  border: 3px solid rgb(7, 40, 254);
+  box-shadow: 0px 0px 10px rgba(21, 19, 19, 0.3);
 }
 
-.contact-page {
+.menu-rest-img {
+  width: 180px;
+  /* Adjust based on your design */
+  height: 100%;
+  /* Ensure consistent height */
+  object-fit: cover;
+  /* Prevent stretching */
+  border-radius: 8px;
+  /* Optional for rounded edges */
+}
+
+.team-cont {
+  background-color: #e3f7f7;
+}
+
+.rider-cont {
+  background-color: rgb(216, 215, 245);
+}
+
+@media screen and (max-width: 991px) {
+  .menu-rest-img {
+    width: 100% !important;
+  }
+}
+
+/* .contact-page {
   background-image: url("https://media.istockphoto.com/id/1184300317/photo/pink-marble-texture-background-abstract-marble-texture-for-design.jpg?s=612x612&w=0&k=20&c=J1ISveeedUT7m1GCBqNSfSLwEJVMdyzVEnWZnlYa2L4=");
+} */
+
+.contact-Img {
+  width: 100vw;  /* Full width */
+  height: 60vh;  /* Fixed height */
+  /* object-fit: cover; */
 }
 
+@media screen and (max-width:850px) {
+  .contact-Img {
+    width: 100vw; 
+    height: 40vh;
+  }  
+} 
+@media screen and (max-width:500px) {
+  .contact-Img {
+    width: 100vw; 
+    height: 30vh;
+  }  
+} 
+@media screen and (max-width:450px) {
+  .contact-Img {
+    width: 100vw; 
+    height: 20vh;
+  }  
+} 
 .contact-bg {
   border: 1px solid black;
   box-shadow: 3px 5px;
@@ -90,7 +156,7 @@ footer {
 @media screen and (max-width:600px) {
   .contact-bg {
     width: 95vw;
-    
+
   }
 }
 
@@ -152,9 +218,13 @@ footer {
   }
 }
 
+.profile-orders {
+  height: 70px;
+}
+
 .profile-orders:hover {
-  background-color: #fce4e4;
-  border: 2px solid rgba(255, 0, 0, 0.3) !important;
+  background-color: #f4eaea;
+  border: 2px solid rgba(255, 0, 0, 0.2) !important;
 }
 
 .prodImg {
@@ -180,16 +250,21 @@ footer {
   .cartImg {
     display: none;
   }
-  .cartName, .cartPrice, .cartRem{
+
+  .cartName,
+  .cartPrice,
+  .cartRem {
     justify-content: end !important;
     align-items: end !important;
     padding-bottom: 10px !important;
     padding: 0 !important;
   }
-  .cartQty{
+
+  .cartQty {
     padding: 0;
-  } 
-  .popular-box{
+  }
+
+  .popular-box {
     width: 90%;
   }
 }
@@ -210,7 +285,7 @@ footer {
 
 .steps-cont {
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)), url('/public/images/bg-11.jpg') no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/public/images/back-5.jpg') no-repeat center center;
   background-size: cover;
   width: 100%;
   padding: 10% 0 !important;
@@ -239,22 +314,21 @@ footer {
   position: relative;
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('/public/images/bg-3.jpg') no-repeat center center;
   background-size: cover;
-  width: 100%;
+  width: 100vw;
   padding: 10% 0 !important;
   color: rgb(255, 255, 255);
 }
 
 .register-cont {
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/bg-1.jpg') no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/back-3.jpg') no-repeat center center;
   background-size: cover;
-  width: 100%;
+  width: 100vw;
   padding: 10% 0 !important;
   color: rgb(255, 255, 255);
 }
 
 .dishes-cont {
-  position: relative;
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url('https://cdn.pixabay.com/photo/2017/03/13/20/16/table-2141025_960_720.jpg') no-repeat center center;
   background-size: cover;
   width: 100%;
@@ -300,13 +374,15 @@ footer {
 }
 
 @media screen and (max-width:500px) {
-  .box{
+  .box {
     width: 95% !important;
   }
-  .box p{
-    margin: 0px !important ;
+
+  .box p {
+    margin: 0px !important;
   }
 }
+
 .orderPlaced::before {
   content: '';
   position: absolute;
@@ -339,7 +415,7 @@ footer {
   position: relative;
   background: url('/public/images/img.png') no-repeat;
   background-size: cover;
-  width: 100vw;
+  width: 99vw;
   height: 90vh;
   display: flex;
   align-items: center;
@@ -383,13 +459,14 @@ footer {
     margin-right: 35%;
     width: 55%;
   }
-  .review-bg img{
+
+  .review-bg img {
     width: 20% !important;
   }
 }
 
 @media screen and (max-width: 1100px) {
-  .bringCloser-img{
+  .bringCloser-img {
     width: 60% !important;
   }
 }
@@ -398,17 +475,21 @@ footer {
   .about-para {
     font-size: 16px !important;
   }
+
   .about-img-cont {
     background-size: cover;
   }
+
   .about-box {
     width: 84%;
     margin: 0px auto;
   }
-  .review-bg img{
+
+  .review-bg img {
     width: 39% !important;
   }
-  .bringCloser-img{
+
+  .bringCloser-img {
     width: 100% !important;
   }
 }
@@ -423,14 +504,55 @@ footer {
   border: none;
   outline: none;
   background-color: blue;
-  color:white;
-  cursor: pointer; 
+  color: white;
+  cursor: pointer;
   width: 4%;
-  padding: 15px; 
+  padding: 15px;
   border-radius: 50%;
 }
 
 .scroll-to-top:hover {
   background-color: white;
-  color:blue
+  color: blue
+}
+
+.order-btn:hover {
+  background-color: #28a745;
+  color: white;
+  transition: 0.3s ease-in-out;
+}
+
+.shadow-faq {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.back-to-top {
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: transparent !important;
+}
+
+.searchBar{
+  width: 20vw;
+  margin-left: auto;
+}
+
+@media screen and (max-width: 900px) {
+  .searchBar{
+    width: 30vw;
+    margin-left: auto;
+  }
+}
+@media screen and (max-width: 600px) {
+  .searchBar{
+    width: 40vw;
+    margin-left: auto;
+  }
 }

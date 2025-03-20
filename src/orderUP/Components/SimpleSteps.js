@@ -5,7 +5,7 @@ import Steps from '../ReUsables/Steps'
 const SimpleSteps = () => {
   return (
     <section className="py-5 steps-cont">
-    <div className="container text-center">
+    <div className="container text-center dish-box">
       <Title heading="What to do!" size={6} />
       <div className="mt-5 row">
             <Steps stepNo='1' img="https://www.creativefabrica.com/wp-content/uploads/2018/10/Menu-3.jpg" desc="Choose menu" />

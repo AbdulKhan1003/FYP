@@ -71,7 +71,7 @@ const Cart = () => {
           </div>
           <div className="card-body p-0">
             {items.map((item, idx) => (
-              <div key={idx} className="row">
+              <div key={idx} className="row mt-3">
                 <div className="col-2 cartQty d-flex justify-content-center align-items-center">
                   <select
                     defaultValue={item.quantity}
@@ -86,7 +86,7 @@ const Cart = () => {
                 </div>
 
                 <div className="col-3 cartImg py-3">
-                  <img style={{ width: '150px', height: '90px' }} src={item.image} alt={item.name} />
+                  <img style={{ width: '150px', height: '90px'}} src={item.image} alt={item.name} />
                 </div>
 
                 <div className="col-2 cartName d-flex justify-content-start align-items-center">
@@ -102,7 +102,7 @@ const Cart = () => {
                     Remove
                   </button>
                 </div>
-                <hr />
+                <hr className='m-0 p-0 my-3' />
               </div>
             ))}
           </div>
@@ -114,20 +114,23 @@ const Cart = () => {
         </div>
       ))}
       <div className='container'>
+        {cartItems.length!==0 && 
+        <>
         <div className="d-flex justify-content-end me-3">
-          <h5 className='ms-auto text-bold fw-bold'>Total Count:{totalCount}</h5>
+          <h5 className='ms-auto text-bold fw-bold'>Item Count: {totalCount}</h5>
         </div>
         <div className="d-flex justify-content-end me-3">
-          <h5 className='ms-auto text-bold fw-bold'>Total Price:{totalPrice}</h5>
+          <h5 className='ms-auto text-bold fw-bold'>Total Price: {totalPrice}</h5>
         </div>
+        </>}
         {cartItems.length === 0 &&
           <>
-            <div className='emptyCart'>
+            <div className='emptyCart m-0 p-0'>
               <center>
                 <img src="empty-cart.jpg" alt="" />
               </center>
             </div>
-            <h2 className='text-center mt-5'>No Items in cart. <Link to='/menu'>Click to add!</Link> </h2>
+            <h3 className='text-center mt-5'>No Items in cart. <Link to='/menu'>Click to add!</Link> </h3>
           </>}
         {cartItems.length !== 0 && <Link to={"/checkout"}><button className='btn btn-outline-success float-end mt-1 mb-5 me-4'>Go to Checkout</button></Link>}
       </div>

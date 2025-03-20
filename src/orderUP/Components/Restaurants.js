@@ -8,13 +8,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useFetchItems } from '../hooks/useFetchItems'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUtensils, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom'
 
 
 const Restaurants = () => {
   const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
+  const location = useLocation()
+  console.log("object", location)
   const navigate = useNavigate()
   const { items, fetchItems } =
-    useFetchItems(`http://192.168.1.10:8080/api/auth/restaurant/${restId}/items`);
+    useFetchItems(`http://192.168.1.15:8080/api/auth/restaurant/${location.state?.restaurantId}/items`);
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
 
@@ -26,6 +29,7 @@ const Restaurants = () => {
   useEffect(() => {
     fetchItemData();
   }, []);
+
   useEffect(() => {
     console.log("Cart Items:", cartItems)
     setCartItems(cartItems)
@@ -82,10 +86,9 @@ const Restaurants = () => {
     );
   };
 
-
   const AddProduct = (prod, newRestId, newRestName) => {
     const existingProduct = cartItems.find(item => item._id === prod._id);
-    
+
     if (existingProduct) {
       setCartItems(
         cartItems.map((item) => {
@@ -114,7 +117,6 @@ const Restaurants = () => {
       setCartItems([...cartItems, newProduct]);
     }
   };
-  
 
   const truncateText = (text, charLimit) => {
     if (text.length <= charLimit) return text;
@@ -133,85 +135,142 @@ const Restaurants = () => {
     return truncated + '...';
   };
 
+  const [allProducts, setAllProducts] = useState([])
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (Array.isArray(items) && items.length > 0) {
+      setAllProducts(items);
+      setLoading(false);
+    }
+  }, [items]);
+
+  const handleSearch = (e) => {
+    setTimeout(() => {
+      setAllProducts(items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+      );
+    }, 500)
+  }
+
   if (items) {
     console.log(items)
     return (
       <div>
         <div className='menu-bg container pt-3'>
-          <Title heading={`All Products for ${restName}`}></Title>
-          {items.map((prod, idx) => {
+          <Title heading={`All Products for ${location.state?.restaurantName}`}></Title>
+          <div className="d-flex mt-3">
+            <div className="input-group searchBar">
+              <span className="input-group-text"><i className="bi bi-search"></i> </span>
+              <input className="form-control" type="search" placeholder="Search here.." aria-label="Search" onChange={handleSearch}
+              />
+            </div>
+          </div>
+          {allProducts.map((prod, idx) => {
             return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx}>
-              <div className="card d-flex flex-lg-row mb-5">
-                <div style={{ height: '280px' }}>
-                  <img src={prod.image} className="prodImg" alt="..." />
-                </div>
+              <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards"
+                data-bs-toggle="offcanvas"
+                data-bs-target={`#offcanvasProduct-${prod.pID}`}
+                aria-controls={`offcanvasProduct-${prod.pID}`}>
+
+                <img src={prod.image} className="card-img-top menu-rest-img img-fluid" alt="..." />
                 <div className="card-body pt-1 pb-0">
                   <h4 className="card-title mt-0">{prod.name}</h4>
-                  <div className='imgDiv'>
-                    <p className="text-secondary mb-2">{truncateText(prod.description, 200)}</p>
-                  </div>
+                  <p className="text-secondary mb-2">{truncateText(prod.description, 100)}</p>
                   <div>
-                    <p className={`mb-0 badge rounded-pill bg-${prod.availability ? 'success' : 'danger'}`}>{prod.availability ? 'In-Stock' : 'Out of Stock'}</p>
+                    <p className={`mb-0 badge rounded-pill bg-${prod.availability ? 'success' : 'danger'}`}>
+                      {prod.availability ? 'In-Stock' : 'Out of Stock'}
+                    </p>
                   </div>
                   <p className="text-dark mt-2 fs-5 mb-0">Rs.{prod.price}</p>
                   <p className="badge bg-info text-dark fs-5 mt-2">{prod.category}</p>
-                  {prod.size ? prod.size.map((items, index) => {
-                    //work in progress
-                    return <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
-                  }) : ''}
+                  {prod.size && prod.size.map((items, index) => (
+                    <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
+                  ))}
                   <br />
-                  <Button type='button' className='mb-3' color='primary' outline data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onClick={() => AddProduct(prod)}>Add to Cart</Button>
 
-                  <div className="offcanvas offcanvas-end " tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                    <div className="offcanvas-header text-center">
-                      <h3 className='text-center' style={{ width: '100%' }} id="offcanvasRightLabel">
-                        <FontAwesomeIcon icon={faUtensils} />
-                        <span className="ms-3">Your Order</span>
-                      </h3>
-                      <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div className="offcanvas-body">
-                      {cartItems.length > 0 && <>
-                        <hr />
-                        <table className="table table-striped table-responsive mt-5 ">
-                          <thead>
-                            <tr>
-                              <th scope="col">Name</th>
-                              <th scope='col'>Quantity</th>
-                              <th scope="col">Price</th>
-                              <th scope="col">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {cartItems.map((item, idx) => {
-                              return <tr key={idx}>
-                                <td style={{ width: '30%' }}>{item.name}</td>
-                                <td><FontAwesomeIcon className={`px-2 ${item.quantity <= 1 ? 'disabled-icon' : ''}`} icon={faMinus} style={{ color: 'red' }} onClick={() => { if (item.quantity > 1) RemoveQty(item); }} />
-                                  <span className='fs-6 mx-1'>{item.quantity ? item.quantity : 1}</span>
-                                  <FontAwesomeIcon className='px-2' icon={faPlus} style={{ color: 'green' }} onClick={() => { AddQty(item) }} /></td>
-                                <td>{item.price}</td>
-                                <td className='mt-3'><button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button></td>
-                              </tr>
-                            })}
-                          </tbody>
-                        </table>
-                        <div className="d-flex justify-content-end me-3">
-                          <h5 className='ms-auto'>Total Count:{totalCount}</h5>
-                        </div>
-                        <div className="d-flex justify-content-end me-3">
-                          <h5 className='ms-auto'>Total Price:{totalPrice}</h5>
-                        </div>
-                        <button className='btn btn-success w-100 mt-3' color='success' onClick={() => { navigate("/checkout") }}>Checkout</button>
-                      </>
-                      }
-                      {cartItems.length === 0 && <>
-                        <hr />
-                        <h3 className="text-center mt-4">No Items in Cart</h3>
-                      </>}
-                    </div>
-                  </div>
+                  {/* Button to Open Cart Offcanvas */}
+                  <Button type='button' className='mb-3' color='primary' outline
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasCart"
+                    aria-controls="offcanvasCart"
+                    onClick={() => AddProduct(prod)}>
+                    Add to Cart
+                  </Button>
                 </div>
               </div>
+
+              {/* Offcanvas for Product Details */}
+              <div className="offcanvas offcanvas-end" tabIndex="-1" id={`offcanvasProduct-${prod.pID}`}
+                aria-labelledby={`offcanvasProductLabel-${prod.pID}`}>
+                <div className="offcanvas-header">
+                  <h4>Product Detail</h4>
+                  <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div className="offcanvas-body">
+                  <img src={prod.image} className="img-fluid mb-3" alt={prod.name} />
+                  <h5 className="offcanvas-title" id={`offcanvasProductLabel-${prod.pID}`}>{prod.name}</h5>
+                  <p>{prod.description}</p>
+                  <p><strong>Price:</strong> Rs.{prod.price}</p>
+                  <p><strong>Category:</strong> {prod.category}</p>
+                </div>
+              </div>
+
+              {/* Offcanvas for Cart */}
+              <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+                <div className="offcanvas-header text-center">
+                  <h3 className='text-center' style={{ width: '100%' }} id="offcanvasCartLabel">
+                    <FontAwesomeIcon icon={faUtensils} />
+                    <span className="ms-3">Your Order</span>
+                  </h3>
+                  <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div className="offcanvas-body">
+                  {cartItems.length > 0 ? (
+                    <>
+                      <hr />
+                      <table className="table table-striped table-responsive mt-5">
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {cartItems.map((item, idx) => (
+                            <tr key={idx}>
+                              <td style={{ width: '30%' }}>{item.name}</td>
+                              <td>
+                                <FontAwesomeIcon className={`px-2 ${item.quantity <= 1 ? 'disabled-icon' : ''}`} icon={faMinus} style={{ color: 'red' }} onClick={() => { if (item.quantity > 1) RemoveQty(item); }} />
+                                <span className='fs-6 mx-1'>{item.quantity ? item.quantity : 1}</span>
+                                <FontAwesomeIcon className={`px-2 ${item.quantity >= 10 ? 'disabled-icon' : ''}`} icon={faPlus} style={{ color: 'green' }} onClick={() => { AddQty(item) }} />
+                              </td>
+                              <td>{item.price}</td>
+                              <td>
+                                <button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="d-flex justify-content-end me-3">
+                        <h5 className='ms-auto'>Item Count: {totalCount}</h5>
+                      </div>
+                      <div className="d-flex justify-content-end me-3">
+                        <h5 className='ms-auto'>Total Price: {totalPrice}</h5>
+                      </div>
+                      <button className='btn btn-success w-100 mt-3' onClick={() => navigate("/checkout")}>Checkout</button>
+                    </>
+                  ) : (
+                    <>
+                      <hr />
+                      <h3 className="text-center mt-4">No Items in Cart</h3>
+                    </>
+                  )}
+                </div>
+              </div>
+
             </div>
           })}
 

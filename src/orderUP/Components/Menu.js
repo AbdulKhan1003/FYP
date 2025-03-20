@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Title from '../ReUsables/Title'
 import { Link } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
@@ -8,6 +8,7 @@ import ScrollToTopButton from '../ReUsables/ScrollToTopButton'
 
 const Menu = () => {
   const { setRestId, setRestName } = useContext(MenuContext)
+
   useEffect(() => {
     document.title = "ORDER UP - Menu"
   })
@@ -18,31 +19,61 @@ const Menu = () => {
   }
 
   const { restaurants, fetchRestaurants } =
-    useFetchRestaurants("http://192.168.1.10:8080/api/auth/restaurants");
+    useFetchRestaurants("http://192.168.1.15:8080/api/auth/restaurants");
+    
+    
+    const fetchData = async () => {
+      await fetchRestaurants();
+    };
+    useEffect(() => {
+      fetchData();
+    }, []);
+    
+  const [allRestaurants, setAllRestaurants] = useState([])
+  const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    await fetchRestaurants();
-  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (Array.isArray(restaurants) && restaurants.length > 0) {
+      setAllRestaurants(restaurants);
+      setLoading(false);
+    }
+  }, [restaurants]);
+
+  const handleSearch = (e) => {
+    setTimeout(() => {
+      setAllRestaurants(restaurants.filter((rest) => rest.name.toLowerCase().includes(e.target.value.toLowerCase()))
+      );
+    }, 500)
+
+  }
 
   if (restaurants) {
     console.log('restaurants', restaurants)
     return (
       <div className='menu-bg container pt-3'>
         <Title heading="All Restaurants"></Title>
-        {restaurants?.map((restaurantItems, idx) => {
-          return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx} onClick={() => { restNameAndID(restaurantItems._id, restaurantItems.name) }}>
-            <Link to={`../restaurant/${restaurantItems._id}/items`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className="card d-flex flex-lg-row mb-5 options">
-                <img src={restaurantItems.thumbnail} className="card-img-top img-fluid" alt="..." />
+        <div className="d-flex mt-3">
+          <div className="input-group searchBar">
+            <span className="input-group-text"><i className="bi bi-search"></i> </span>
+            <input className="form-control" type="search" placeholder="Search here.." aria-label="Search" onChange={handleSearch}
+            />
+          </div>
+        </div>
+        {allRestaurants?.map((restaurantItems, idx) => {
+          return <div style={{ cursor: 'pointer' }} className='mt-2' key={idx} onClick={() => { restNameAndID(restaurantItems._id, restaurantItems.name) }}>
+            <Link to={`../restaurant/${restaurantItems._id}/items`}
+              state={{
+                restaurantName: restaurantItems.name,
+                restaurantId: restaurantItems._id
+              }}
+              style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards">
+                <img src={restaurantItems.logo} className="card-img-top img-fluid menu-rest-img" alt="..." />
                 <div className="card-body pt-1">
-                  <h3 className="">{restaurantItems.address.city}</h3>
-                  <h5 className="card-title mt-0 text-secondary">{restaurantItems.address.address}</h5>
                   <div>
                     <h3 className=''>{restaurantItems.name}</h3>
                   </div>
+                  <h5 className="card-title mt-0 text-secondary">{restaurantItems.address.address},{restaurantItems.address.city}</h5>
                   <h2 className="badge bg-info fs-6 text-dark mt-2">{restaurantItems.phone}</h2>
                   <div>
                     <h5 className=''>Rating: {restaurantItems.rating}⭐</h5>
@@ -55,7 +86,7 @@ const Menu = () => {
             </Link>
           </div>
         })}
-          <ScrollToTopButton />
+        <ScrollToTopButton />
       </div>
     )
   } else {
