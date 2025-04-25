@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 
 function Profile() {
 
+  const [toggle, setToggle] = useState("Order History")
   useEffect(() => {
     // setUser({
     //   ...user,
@@ -38,46 +39,64 @@ function Profile() {
             </div>
           </div>
         </div>
-        <div id='Orders' className="card mb-4 ">
-          <div className="card-body">
-            <h3 className="h5 mb-3 fw-bold">Order History</h3>
-
-            {user.orderHistory.length <= 0 ? <>
-              <h5 className='d-flex justify-content-center'>No order placed.&nbsp; <Link to={"/menu"}>Tap to order</Link></h5>
-            </> : <>
-              <ul className="list-group">
-                {user.orderHistory.map((orders, idx) => {
-                  return (<li key={idx} className="list-group-item d-flex justify-content-between align-items-center mb-3 border profile-orders">
-                    <div>
-                      <h4 className="h6 mb-1">Order no: {idx + 1}</h4>
-                      <p className="text-muted mb-0">Placed on: {orders.date}</p>
-                    </div>
-
-                    <div className="d-flex flex-column align-items-center flex-grow-1 mx-5">
-                      <div className="text-start w-50">Progress State</div>
-
-                      <div className="progress w-50">
-                        <div
-                          className="progress-bar"
-                          role="progressbar"
-                          style={{ width: "60%" }}
-                          aria-valuenow="60"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        >
-                        </div>
+        {/* Order History and active orders */}
+        <div id='Orders' className="card mb-4">
+          <div className="card-body m-0 p-0 mt-2">
+            <div className="btn-group d-flex w-50 mx-auto mb-4" role="group" aria-label="Basic example">
+              <button type="button" className="btn btn-purple" onClick={() => setToggle("Order History")}>Order History <span className='badge rounded-pill bg-light text-black' >{user.orderHistory.length} </span></button>
+              <button type="button" className="btn btn-purple ms-1" onClick={() => setToggle("Active Orders")}>Active Orders <span className='badge rounded-pill bg-light text-black' >{user.orderHistory.length} </span></button>
+            </div>
+            {/* Order History */}
+            {toggle === "Order History" && (
+              user.orderHistory.length <= 0 ? (
+                  <div className="border py-3">
+                    <h5 className='d-flex justify-content-center'>No order placed.&nbsp; <Link to={"/menu"}>Tap to order</Link></h5>
+                  </div>
+              ) : (
+                <ul className="list-group">
+                  {user.orderHistory.map((orders, idx) => (
+                    <li key={idx} className="list-group-item d-flex justify-content-between align-items-center mb-3 border profile-orders">
+                      <div>
+                        <h4 className="h6 mb-1">Order no: {idx + 1}</h4>
+                        <p className="text-muted mb-0">Placed on: {orders.date}</p>
                       </div>
+
+                      <span className="badge bg-primary rounded-pill">Rs.{orders.total}</span>
+                    </li>
+                  ))}
+                </ul>
+              )
+            )}
+
+            {toggle === "Active Orders" && <>
+              <ul className="list-group">
+                <li className="list-group-item d-flex justify-content-between align-items-center mb-3 border profile-orders">
+                  <div>
+                    <h4 className="h6 mb-1">Order no: 1</h4>
+                    <p className="text-muted mb-0">Placed on: 21/3/2025</p>
+                  </div>
+                  <div className="d-flex flex-column align-items-center flex-grow-1 mx-5">
+                    <div className="text-start w-50">Progress State</div>
+                    <div className="progress w-50">
+                      <div
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{ width: "60%" }}
+                        aria-valuenow="60"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
-
-                    <span className="badge bg-primary rounded-pill">Rs.{orders.total}</span>
-                  </li>
-                  );
-
-                })}
+                  </div>
+                </li>
               </ul>
+
             </>}
+
+
           </div>
         </div>
+
         <div className="card">
           <div className="card-body">
             <h3 className="h5 mb-3 fw-bold">Account Settings</h3>

@@ -14,6 +14,7 @@ import './Authentication/LoginSignup.css'
 import Profile from './Components/profile';
 import Checkout from './Components/checkout';
 import OrderPlaced from './Components/orderPlaced';
+import LiveTracker from './Components/liveTracker';
 import { MenuContext } from './AllRestaurants/RestaurantsContext';
 
 const Index = () => {
@@ -50,6 +51,7 @@ const Index = () => {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/liveTracker" element={< LiveTracker/>} />
               {order && <Route path="/orderComplete" element={<OrderPlaced />} />}
               {!order && <Route path="/orderComplete" element={<Menu />} />}
               <Route path="*" element={<Home />} />

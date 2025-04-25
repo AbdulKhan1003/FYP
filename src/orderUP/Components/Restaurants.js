@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import Title from '../ReUsables/Title'
@@ -6,29 +6,99 @@ import { Button } from 'reactstrap'
 import toast, { Toaster } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
 import { useFetchItems } from '../hooks/useFetchItems'
+import { useFetchReviews } from '../hooks/useFetchItemReviews'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUtensils, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import axios from 'axios'
 
 
 const Restaurants = () => {
-  const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
-  const location = useLocation()
-  console.log("object", location)
-  const navigate = useNavigate()
-  const { items, fetchItems } =
-    useFetchItems(`http://192.168.1.15:8080/api/auth/restaurant/${location.state?.restaurantId}/items`);
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [totalCount, setTotalCount] = useState(0)
-
   document.title = "ORDER UP - Products"
 
-  const fetchItemData = async () => {
-    await fetchItems();
-  };
+  const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
+  const userProfile = JSON.parse(localStorage.getItem("User"))
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [item, setItem] = useState(null)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  const [loading, setLoading] = useState(true);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('')
+  
+  
+  const [ items, setItems ] = useState(null)
+  const [ reviews, setReviews ] = useState(null)
+
+  const fetchItems = async () => {
+    try {
+      const { data } = await axios.get(`http://192.168.1.7:8080/api/restaurant/${location.state?.restaurantId}/items`)
+      if (data) {
+        setItems(data.items)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    fetchItemData();
+    fetchItems()
   }, []);
+
+  const fetchItemReviews = async () => {
+    try {
+      const { data } = await axios.get(`http://192.168.1.7:8080/api/restaurant/item/${item._id}/reviews`)
+      if (data) {
+        console.log(data)
+        setReviews(data.reviews)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleItemReviewPost = async (e) => {
+    e.preventDefault()
+    try {
+      if(rating===0){
+        Swal.fire({
+          title: "Error",
+          text: "Please select stars(1-5)",
+          icon: "warning"
+        });
+      }
+      else{
+        const { data } = await axios.post(`http://192.168.1.7:8080/api/restaurant/item/${item._id}/reviews/${userProfile._id}`, {
+          rating,
+          comment: review
+        })
+        Swal.fire({
+          title: "Success",
+          text: data.message,
+          icon: "success"
+        });
+        fetchItemReviews()
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: error.response.data.message || "An unexpected error occurred",
+        icon: "warning"
+      });
+    }
+    finally{
+      setRating(0)
+      setReview('')
+    }
+  }
+
+  useEffect(() => {
+    if (item) {
+      console.log('Called')
+      fetchItemReviews()
+    }
+  }, [item])
 
   useEffect(() => {
     console.log("Cart Items:", cartItems)
@@ -135,22 +205,22 @@ const Restaurants = () => {
     return truncated + '...';
   };
 
-  const [allProducts, setAllProducts] = useState([])
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (Array.isArray(items) && items.length > 0) {
-      setAllProducts(items);
-      setLoading(false);
-    }
-  }, [items]);
+  const handleClick = (index) => {
+    setRating(index + 1);
+  };
 
   const handleSearch = (e) => {
     setTimeout(() => {
-      setAllProducts(items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+      setItems(items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
       );
     }, 500)
   }
+
+
+  useEffect(() => {
+    console.log('reviews', reviews)
+  }, [reviews])
 
   if (items) {
     console.log(items)
@@ -165,20 +235,24 @@ const Restaurants = () => {
               />
             </div>
           </div>
-          {allProducts.map((prod, idx) => {
+          {items.map((prod, idx) => {
             return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx}>
               <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards"
                 data-bs-toggle="offcanvas"
-                data-bs-target={`#offcanvasProduct-${prod.pID}`}
-                aria-controls={`offcanvasProduct-${prod.pID}`}>
-
-                <img src={prod.image} className="card-img-top menu-rest-img img-fluid" alt="..." />
+                data-bs-target={`#offcanvasProduct-${prod._id}`}
+                aria-controls={`offcanvasProduct-${prod.id}`}
+                onClick={
+                  () => {
+                  console.log("Clicked")
+                  setItem(prod)}
+                }>
+                <img src={ `http://192.168.1.7:8080/api/images/${prod.image}`} className="card-img-top menu-rest-img img-fluid" alt="..." />
                 <div className="card-body pt-1 pb-0">
                   <h4 className="card-title mt-0">{prod.name}</h4>
                   <p className="text-secondary mb-2">{truncateText(prod.description, 100)}</p>
                   <div>
-                    <p className={`mb-0 badge rounded-pill bg-${prod.availability ? 'success' : 'danger'}`}>
-                      {prod.availability ? 'In-Stock' : 'Out of Stock'}
+                    <p className={`mb-0 badge rounded-pill bg-${prod.lowStockAlert ? 'danger' : 'success'}`}>
+                      {prod.lowStockAlert ? 'Limited Orders' : 'In-Stock'}
                     </p>
                   </div>
                   <p className="text-dark mt-2 fs-5 mb-0">Rs.{prod.price}</p>
@@ -200,18 +274,65 @@ const Restaurants = () => {
               </div>
 
               {/* Offcanvas for Product Details */}
-              <div className="offcanvas offcanvas-end" tabIndex="-1" id={`offcanvasProduct-${prod.pID}`}
-                aria-labelledby={`offcanvasProductLabel-${prod.pID}`}>
+              <div className="offcanvas offcanvas-end" tabIndex="-1" id={`offcanvasProduct-${prod._id}`}
+                aria-labelledby={`offcanvasProductLabel-${prod._id}`}>
                 <div className="offcanvas-header">
                   <h4>Product Detail</h4>
                   <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
-                  <img src={prod.image} className="img-fluid mb-3" alt={prod.name} />
+                  <img src={ `http://192.168.1.7:8080/api/images/${prod.image}`} className="img-fluid mb-3" alt={prod.name} />
                   <h5 className="offcanvas-title" id={`offcanvasProductLabel-${prod.pID}`}>{prod.name}</h5>
                   <p>{prod.description}</p>
                   <p><strong>Price:</strong> Rs.{prod.price}</p>
                   <p><strong>Category:</strong> {prod.category}</p>
+                  <hr />
+                  <h5 className='mt-4'>Add a Review</h5>
+                  <form method='POST' onSubmit={handleItemReviewPost}>
+                    <div className="flex gap-2">
+                      {[...Array(5)].map((_, index) => (
+                        <svg
+                          key={index}
+                          onClick={() => handleClick(index)}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill={index < rating ? "#FFD700" : "#ddd"}
+                          stroke="none"
+                          width="40"
+                          height="40"
+                          style={{
+                            cursor: "pointer",
+                            filter: index < rating ? "drop-shadow(0 0 6px #FFD700)" : "none",
+                            transition: "all 0.2s ease-in-out",
+                          }}
+                        >
+                          <path d="M12 2l2.9 6.9 7.6.6-5.5 4.8 1.7 7.4L12 18l-6.7 4.7 1.7-7.4-5.5-4.8 7.6-.6z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <input type="text" required placeholder='What do u think?' value={review} onChange={(e)=> setReview(e.target.value)} className="form-control mt-2 mb-2" aria-label="Text input with radio button" />
+                    <Button className='btn-info btn-sm d-flex ms-auto mt-1'>Post Review</Button>
+                  </form>
+                  <hr />
+                  <h3 className='mt-4'>Total Reviews({reviews ? reviews.length : 0})</h3>
+                  {reviews !== null && reviews.map((review, idx) => {
+                    return <div key={idx} className='mt-4'>
+                      <div className="photo-name d-flex align-items-center">
+                        <img className="rounded-circle float-start me-3" style={{ width: "12%" }} src={ `http://192.168.1.7:8080/api/images/${review.userId.profilePicture}`} alt="" />
+                        <p className='m-0 p-0' style={{ fontSize: '12px' }}>{review.userId.name}</p>
+                      </div>
+                      <div className="d-flex mt-2" style={{ fontSize: '0.7rem' }}>
+                        <span className='me-3'>
+                          {[...Array(Math.floor(review.rating || 0))].map((_, index) => (
+                            <span key={index}>⭐</span>
+                          ))}
+                        </span>
+                        <span>{review.createdAt ? review.createdAt.slice(0, 10) : ''}</span>
+                      </div>
+                      <p className='m-0 p-0 mt-1'>{review ? review.comment : ''}</p>
+                      <hr />
+                    </div>
+                  })}
                 </div>
               </div>
 

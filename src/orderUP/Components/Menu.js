@@ -4,51 +4,48 @@ import { Link } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import { useFetchRestaurants } from '../hooks/useFetchRestaurants'
 import ScrollToTopButton from '../ReUsables/ScrollToTopButton'
+import axios from 'axios'
 
 
 const Menu = () => {
   const { setRestId, setRestName } = useContext(MenuContext)
+  const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
     document.title = "ORDER UP - Menu"
   })
+
 
   const restNameAndID = (id, name) => {
     setRestId(id)
     setRestName(name)
   }
 
-  const { restaurants, fetchRestaurants } =
-    useFetchRestaurants("http://192.168.1.15:8080/api/auth/restaurants");
-    
-    
-    const fetchData = async () => {
-      await fetchRestaurants();
-    };
-    useEffect(() => {
-      fetchData();
-    }, []);
-    
-  const [allRestaurants, setAllRestaurants] = useState([])
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (Array.isArray(restaurants) && restaurants.length > 0) {
-      setAllRestaurants(restaurants);
-      setLoading(false);
+  const fetchRestaurants = async () => {
+    try {
+      const { data } = await axios.get("http://192.168.1.7:8080/api/restaurants")
+      if (data) {
+        setRestaurants(data.restaurants)
+      }
+    } catch (error) {
+      console.log(error)
     }
-  }, [restaurants]);
+  }
+  useEffect(() => {
+    fetchRestaurants()
+  }, []);
+
 
   const handleSearch = (e) => {
     setTimeout(() => {
-      setAllRestaurants(restaurants.filter((rest) => rest.name.toLowerCase().includes(e.target.value.toLowerCase()))
+      setRestaurants(restaurants.filter((rest) => rest.name.toLowerCase().includes(e.target.value.toLowerCase()))
       );
     }, 500)
 
   }
 
   if (restaurants) {
-    console.log('restaurants', restaurants)
+    console.log('restaurants:', restaurants)
     return (
       <div className='menu-bg container pt-3'>
         <Title heading="All Restaurants"></Title>
@@ -59,7 +56,7 @@ const Menu = () => {
             />
           </div>
         </div>
-        {allRestaurants?.map((restaurantItems, idx) => {
+        {restaurants?.map((restaurantItems, idx) => {
           return <div style={{ cursor: 'pointer' }} className='mt-2' key={idx} onClick={() => { restNameAndID(restaurantItems._id, restaurantItems.name) }}>
             <Link to={`../restaurant/${restaurantItems._id}/items`}
               state={{
@@ -68,7 +65,7 @@ const Menu = () => {
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards">
-                <img src={restaurantItems.logo} className="card-img-top img-fluid menu-rest-img" alt="..." />
+              <img src={ `http://192.168.1.7:8080/api/images/${restaurantItems.logo}`} alt="Restaurant Logo" className="card-img-top img-fluid menu-rest-img" />
                 <div className="card-body pt-1">
                   <div>
                     <h3 className=''>{restaurantItems.name}</h3>

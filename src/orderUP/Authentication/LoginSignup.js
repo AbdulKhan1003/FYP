@@ -42,20 +42,23 @@ useEffect(()=>{
     initialValues: {
       name: "",
       email: "",
-      password: ""
+      password: "",
+      profilePicture:""  
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
       formik.resetForm()
+      console.log('values', values)
       if (action === "SignUp") {
         try {
           setLoading(true);
           // API call to sign up
-          const { data } = await axios.post("http://192.168.1.15:8080/api/auth/register", {
+          const { data } = await axios.post("http://192.168.1.7:8080/api/auth/register", {
             name: values.name,
             email: values.email,
             password: values.password,
-            profilePicture: "66d1b047b588f463a39a8938",
+            profilePicture:'67d9f09659e0fe818b3c7395'
+   
           });
             Swal.fire({
               title: "Success",
@@ -81,7 +84,7 @@ useEffect(()=>{
               alert("Please enter email and password");
             }
             //API call to SIGN IN
-            const { data } = await axios.post("http://192.168.1.15:8080/api/auth/login", {
+            const { data } = await axios.post("http://192.168.1.7:8080/api/auth/login", {
               email: values.email,
               password: values.password,
             });
@@ -181,6 +184,23 @@ useEffect(()=>{
               <FormFeedback className='feedback-form'  >{formik.errors.password}</FormFeedback>
             ) : null}
           </div>
+          {action === 'SignUp' && <div className='Picture picDiv m-4'>
+            <img src='pic.png' alt="" />
+            <Input
+              type="file"
+              name="profilePicture"
+              className='w-100'
+              onChange={(event) => {
+                const file = event.currentTarget.files[0];
+                if (file) {
+                  formik.setFieldValue('profilePicture', file);
+                }
+              }}
+              onBlur={formik.handleBlur}
+              invalid={formik.touched.profilePicture && !!formik.errors.profilePicture}
+            >
+            </Input>
+          </div>}
           <div className='d-flex justify-content-center flex-wrap mb-5'>
             <Button type='submit' className={`btn btn-purple btn-outline-success me-3 ms-3`}>{action === "Login" ? 'Login' : 'SignUp'}</Button>
           </div>

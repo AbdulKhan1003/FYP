@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import BreadCrumbs from '../ReUsables/BreadCrumbs'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
 import { useFormik } from "formik";
@@ -7,10 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { Label, Form, Input, FormFeedback } from "reactstrap";
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function Checkout() {
   const navigate = useNavigate()
   const { cartItems, setPage, setCartItems, setOrder, user, setUser } = useContext(MenuContext)
+  const [checkout, setCheckout] = useState(null)
+  const userProfile = JSON.parse(localStorage.getItem("User"))
   useEffect(() => {
     document.title = "ORDER UP - Checkout"
     setPage("Checkout")
@@ -30,6 +33,8 @@ function Checkout() {
     address: Yup.string()
       .min(8, "Address must be at least 8 characters")
       .required("Address is required"),
+    city: Yup.string()
+      .required("City is required"),
   });
 
   const formik = useFormik({
@@ -37,59 +42,85 @@ function Checkout() {
       name: "",
       email: user.email,
       number: "",
-      address: ""
+      address: "",
+      city: ""
     },
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      console.log("Form val", values)
-      const data = new FormData();
-      data.append('name', values.name);
-      data.append('email', user.email);
-      data.append('number', values.number);
-      data.append('address', values.address);
-      data.append('Order', cartItems.map(item => item.name).join('\n'));
-      data.append("access_key", "5f7651c2-7a4a-4676-b9dc-df9460a25ad5");
-
-      const json = JSON.stringify(Object.fromEntries(data));
-
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: json
-      }).then((res) => res.json());
-      if (res.success) {
-        // Swal.fire({
-        //   title: "Success",
-        //   text: "Order Placed",
-        //   icon: "success"
-        // });
-        console.log("Submitted")
-        const timestamp = Date.now();
-        const date = new Date(timestamp);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-
-        const formattedDate = `${year}-${month}-${day}`;
-
-        setOrder(true)
-        const order = {
-          items: cartItems.map(item => item.name).join('\n'),
-          date: formattedDate,
-          total: sum(cartItems.map((item) => item.price))
-        };
-        setUser(prevUser => ({
-          ...prevUser,
-          orderHistory: [...(prevUser.orderHistory || []),
-          order
-        ]
-        }));
-        navigate("/orderComplete")
-        setCartItems([])
+      console.log("Submit", values)
+      console.log(cartItems)
+      try {
+        const { data } = await axios.post(`http://192.168.1.7:8080/api/checkout`, {
+          userId: userProfile._id,
+          name: values.name,
+          phone: values.number,
+          city: values.city,
+          address: values.address,
+          cart: cartItems,
+          estimatedDeliveryTime: "30 mins"
+        })
+        Swal.fire({
+          title: "Success",
+          text: data.message,
+          icon: "success"
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: error.response.data.message || "An unexpected error occurred",
+          icon: "warning"
+        });
       }
+
+      // console.log("Form val", values)
+      // const data = new FormData();
+      // data.append('name', values.name);
+      // data.append('email', user.email);
+      // data.append('number', values.number);
+      // data.append('address', values.address);
+      // data.append('Order', cartItems.map(item => item.name).join('\n'));
+      // data.append("access_key", "5f7651c2-7a4a-4676-b9dc-df9460a25ad5");
+
+      // const json = JSON.stringify(Object.fromEntries(data));
+
+      // const res = await fetch("https://api.web3forms.com/submit", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json"
+      //   },
+      //   body: json
+      // }).then((res) => res.json());
+      // if (res.success) {
+      //   // Swal.fire({
+      //   //   title: "Success",
+      //   //   text: "Order Placed",
+      //   //   icon: "success"
+      //   // });
+      //   console.log("Submitted")
+      //   const timestamp = Date.now();
+      //   const date = new Date(timestamp);
+      //   const year = date.getFullYear();
+      //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      //   const day = date.getDate().toString().padStart(2, '0');
+
+      //   const formattedDate = `${year}-${month}-${day}`;
+
+      //   setOrder(true)
+      //   const order = {
+      //     items: cartItems.map(item => item.name).join('\n'),
+      //     date: formattedDate,
+      //     total: sum(cartItems.map((item) => item.price))
+      //   };
+      //   setUser(prevUser => ({
+      //     ...prevUser,
+      //     orderHistory: [...(prevUser.orderHistory || []),
+      //     order
+      //   ]
+      //   }));
+      //   navigate("/orderComplete")
+      //   setCartItems([])
+      // }
     }
   });
 
@@ -137,7 +168,7 @@ function Checkout() {
                 <Input
                   name="number"
                   className="form-control w-75"
-                  placeholder="0306-12345678"
+                  placeholder="030612345678"
                   type="tel"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -185,6 +216,26 @@ function Checkout() {
                 />
                 {formik.touched.address && formik.errors.address ? (
                   <FormFeedback>{formik.errors.address}</FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-4">
+                <Label className="m-0" htmlFor="city">
+                  <b>
+                    City <span className="text-danger">*</span>
+                  </b>
+                </Label>
+                <Input
+                  type="text"
+                  name="city"
+                  placeholder="Enter your city"
+                  value={formik.values.city}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  invalid={formik.touched.city && !!formik.errors.city}
+                  rows={4}
+                />
+                {formik.touched.city && formik.errors.city ? (
+                  <FormFeedback>{formik.errors.city}</FormFeedback>
                 ) : null}
               </div>
             </div>

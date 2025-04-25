@@ -7,7 +7,8 @@
 
 .personDiv img,
 .emailDiv img,
-.passDiv img {
+.passDiv img,
+.picDiv img {
     height: 30px;
     width: 30px;
     margin-right: 20px;
@@ -16,7 +17,8 @@
 
 .personDiv,
 .emailDiv,
-.passDiv {
+.passDiv,
+.picDiv {
     width: 40vw;
     background-color: rgb(189, 189, 189);
     height: 50px;

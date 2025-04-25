@@ -86,7 +86,7 @@ const Cart = () => {
                 </div>
 
                 <div className="col-3 cartImg py-3">
-                  <img style={{ width: '150px', height: '90px'}} src={item.image} alt={item.name} />
+                  <img style={{ width: '150px', height: '90px'}} src={`http://192.168.1.7:8080/api/images/${item.image}`} alt={item.name} />
                 </div>
 
                 <div className="col-2 cartName d-flex justify-content-start align-items-center">
