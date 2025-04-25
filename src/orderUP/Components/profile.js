@@ -1,23 +1,35 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
+import axios from 'axios'
 
 function Profile() {
 
   const [toggle, setToggle] = useState("Order History")
+  const [orderHistory, setOrderHistory] = useState(null)
+  const [activeOrders, setActiveOrders] = useState(null)
+  const nav = useNavigate()
+  const { setUser, setCartItems, user, API_URL } = useContext(MenuContext)
+  const allOrders = user.orderHistory.flatMap((order, orderIndex) =>
+    order.map((item) => ({
+      orderIndex: orderIndex + 1,
+      ...item,
+    }))
+  );
+  console.log(allOrders);
+
+  const getOrderHistory = async () => {
+    const { data } = axios.get(`${API_URL}/user/${user._id}/history/orders`)
+    console.log(data)
+  }
+
   useEffect(() => {
-    // setUser({
-    //   ...user,
-    //   orderHistory: []
-    // });
     document.title = "ORDER UP - Profile"
+
+
+    getOrderHistory()
   }, []);
 
-
-  const userProfile = JSON.parse(localStorage.getItem("User"))
-  console.log("user prof", userProfile)
-  const nav = useNavigate()
-  const { setUser, setCartItems, user } = useContext(MenuContext)
   const handleLogout = () => {
     localStorage.setItem('LoggedIn', 0)
     setCartItems([])
@@ -31,11 +43,11 @@ function Profile() {
       <div className="container my-4">
         <div className="card mb-4">
           <div className="card-body d-flex align-items-center profile-main">
-            <img src={userProfile ? userProfile.profilePicture : "https://placehold.co/100x100"} alt='Profile pic' className="rounded-circle me-4" />
+            <img src={`${API_URL}/images/${user.profilePicture}`} alt='Profile pic' style={{ width: '5%', borderRadius: '50%' }} className="me-4" />
             <div>
-              <h2 className="h4 mb-0">{userProfile ? userProfile.name : "Guest"}</h2>
-              <p className="text-muted mb-1">{userProfile ? userProfile.email : "abc@example.com"}</p>
-              <p className="text-muted mb-1">{userProfile ? userProfile.role : "Guest"}</p>
+              <h2 className="h4 mb-0">{user ? user.name : "Guest"}</h2>
+              <p className="text-muted mb-1">{user ? user.email : "abc@example.com"}</p>
+              <p className="text-muted mb-1">{user ? user.role : "Guest"}</p>
             </div>
           </div>
         </div>
@@ -48,22 +60,25 @@ function Profile() {
             </div>
             {/* Order History */}
             {toggle === "Order History" && (
-              user.orderHistory.length <= 0 ? (
-                  <div className="border py-3">
-                    <h5 className='d-flex justify-content-center'>No order placed.&nbsp; <Link to={"/menu"}>Tap to order</Link></h5>
-                  </div>
+              user.orderHistory.length <= 0 || user.orderHistory === null ? (
+                <div className="border py-3">
+                  <h5 className='d-flex justify-content-center'>No order placed.&nbsp; <Link to={"/menu"}>Tap to order</Link></h5>
+                </div>
               ) : (
                 <ul className="list-group">
-                  {user.orderHistory.map((orders, idx) => (
-                    <li key={idx} className="list-group-item d-flex justify-content-between align-items-center mb-3 border profile-orders">
-                      <div>
-                        <h4 className="h6 mb-1">Order no: {idx + 1}</h4>
-                        <p className="text-muted mb-0">Placed on: {orders.date}</p>
+                  {Object.entries(user.orderHistory).map(([orderIndex, items]) => (
+                    <li key={orderIndex} className="list-group-item border mb-3 profile-orders">
+                      <div className="mb-2 d-flex justify-content-between">
+                        <h4 className="h6 mb-1"><span className="fw-bold">Order no:</span> {orderIndex+1}</h4>
+                        <span className="fw-bold">Total: Rs.{items.reduce((sum, item) => sum + item.price, 0)}</span>
                       </div>
-
-                      <span className="badge bg-primary rounded-pill">Rs.{orders.total}</span>
+                      <span className='fw-bold'>Items:</span>
+                      {items.map((item) => (
+                          <p key={item._id} className="mb-0">{item.name}</p>
+                      ))}
                     </li>
                   ))}
+
                 </ul>
               )
             )}

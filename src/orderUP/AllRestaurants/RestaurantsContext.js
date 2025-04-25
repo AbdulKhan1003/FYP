@@ -5,21 +5,25 @@ const MenuContext = createContext();
 const RestaurantsContext = (props) => {
     const [cartItems, setCartItems] = useState(
         JSON.parse(localStorage.getItem('Cart Items')) || []
-      );
-      
-    const [restName, setRestName] = useState(null)
-    const [restId, setRestId] =useState(null)
+    );
+
+    const [rest, setRest] = useState(null)
     const [cartQuantity, setCartQuantity] = useState(0)
-    const [page, setPage] =  useState(null)
+    const [page, setPage] = useState(null)
     const [user, setUser] = useState(
         JSON.parse(localStorage.getItem('User')) || {}
-      );
+    );
     const [order, setOrder] = useState(false)
-      
+    const API_URL = "http://192.168.1.7:8080/api"
+
 
     useEffect(() => {
         localStorage.setItem('Cart Items', JSON.stringify(cartItems));
-        setCartQuantity(cartItems.length)
+
+        const allItems = cartItems.flatMap(rest => rest.order);
+        const totalQuantity = allItems.reduce((acc, item) => acc + (item.quantity || 0), 0);
+        setCartQuantity(totalQuantity);
+
     }, [cartItems]);
 
 
@@ -29,8 +33,10 @@ const RestaurantsContext = (props) => {
 
 
     return (
-        <MenuContext.Provider value={{cartItems, setCartItems,restName, setRestName, restId,setRestId, 
-        cartQuantity,setCartQuantity, user,setUser, page,setPage, order,setOrder}}>
+        <MenuContext.Provider value={{
+            cartItems, setCartItems, rest, setRest,
+            cartQuantity, setCartQuantity, user, setUser, page, setPage, order, setOrder, API_URL
+        }}>
             {props.children}
         </MenuContext.Provider>
     );

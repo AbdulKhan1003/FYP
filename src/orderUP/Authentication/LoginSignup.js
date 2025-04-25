@@ -13,7 +13,7 @@ import { MenuContext } from '../AllRestaurants/RestaurantsContext';
 function LoginSignup() {
   const [action, setAction] = useState('Login')
   const [loading, setLoading] = useState(null);
-  const {user,setUser} = useContext(MenuContext)
+  const {user,setUser, API_URL} = useContext(MenuContext)
 
   document.title = `Order Up - ${action} Page`
 
@@ -53,7 +53,7 @@ useEffect(()=>{
         try {
           setLoading(true);
           // API call to sign up
-          const { data } = await axios.post("http://192.168.1.7:8080/api/auth/register", {
+          const { data } = await axios.post(`${API_URL}/auth/register`, {
             name: values.name,
             email: values.email,
             password: values.password,
@@ -84,7 +84,7 @@ useEffect(()=>{
               alert("Please enter email and password");
             }
             //API call to SIGN IN
-            const { data } = await axios.post("http://192.168.1.7:8080/api/auth/login", {
+            const { data } = await axios.post(`${API_URL}/auth/login`, {
               email: values.email,
               password: values.password,
             });

@@ -11,16 +11,16 @@ import axios from 'axios';
 
 function Checkout() {
   const navigate = useNavigate()
-  const { cartItems, setPage, setCartItems, setOrder, user, setUser } = useContext(MenuContext)
-  const [checkout, setCheckout] = useState(null)
-  const userProfile = JSON.parse(localStorage.getItem("User"))
+  const { cartItems, setPage, setCartItems, setOrder, user, setUser, API_URL } = useContext(MenuContext)
+
   useEffect(() => {
     document.title = "ORDER UP - Checkout"
     setPage("Checkout")
   }, [])
 
+  const allItems = cartItems.flatMap(rest => rest.order);
+  const sum = items => items.reduce((prevVal, currVal) => prevVal + currVal, 0);
 
-  const sum = items => { return items.reduce((prevVal, currVal) => prevVal + currVal, 0) }
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     number: Yup.string()
@@ -33,8 +33,7 @@ function Checkout() {
     address: Yup.string()
       .min(8, "Address must be at least 8 characters")
       .required("Address is required"),
-    city: Yup.string()
-      .required("City is required"),
+    city: Yup.string().required("City is required"),
   });
 
   const formik = useFormik({
@@ -50,24 +49,36 @@ function Checkout() {
       console.log("Submit", values)
       console.log(cartItems)
       try {
-        const { data } = await axios.post(`http://192.168.1.7:8080/api/checkout`, {
-          userId: userProfile._id,
+        const { data } = await axios.post(`${API_URL}/checkout`, {
+          userId: user._id,
           name: values.name,
           phone: values.number,
           city: values.city,
           address: values.address,
           cart: cartItems,
-          estimatedDeliveryTime: "30 mins"
+          estimatedDeliveryTime: "30 mins",
+          notes:'Add Extra Things'
         })
         Swal.fire({
           title: "Success",
           text: data.message,
           icon: "success"
         });
+    const allItems = cartItems.flatMap(item => item.order)
+        setUser((prevUser) => ({
+          ...prevUser,
+          orderHistory: [...(prevUser.orderHistory || []), allItems],
+        }));
+        
+        setOrder(true)
+        setCartItems([])
+        navigate("/orderComplete")
+
+
       } catch (error) {
         Swal.fire({
           title: "Error",
-          text: error.response.data.message || "An unexpected error occurred",
+          text: error.response?.data?.message || "An unexpected error occurred",
           icon: "warning"
         });
       }
@@ -91,19 +102,14 @@ function Checkout() {
       //   },
       //   body: json
       // }).then((res) => res.json());
+
       // if (res.success) {
-      //   // Swal.fire({
-      //   //   title: "Success",
-      //   //   text: "Order Placed",
-      //   //   icon: "success"
-      //   // });
       //   console.log("Submitted")
       //   const timestamp = Date.now();
       //   const date = new Date(timestamp);
       //   const year = date.getFullYear();
       //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
       //   const day = date.getDate().toString().padStart(2, '0');
-
       //   const formattedDate = `${year}-${month}-${day}`;
 
       //   setOrder(true)
@@ -114,9 +120,7 @@ function Checkout() {
       //   };
       //   setUser(prevUser => ({
       //     ...prevUser,
-      //     orderHistory: [...(prevUser.orderHistory || []),
-      //     order
-      //   ]
+      //     orderHistory: [...(prevUser.orderHistory || []), order]
       //   }));
       //   navigate("/orderComplete")
       //   setCartItems([])
@@ -141,9 +145,7 @@ function Checkout() {
               <h4 className='mt-5'>Billing Details</h4>
               <div className="mb-3">
                 <Label className="m-0" htmlFor="name">
-                  <b>
-                    Name <span className="text-danger">*</span>
-                  </b>
+                  <b>Name <span className="text-danger">*</span></b>
                 </Label>
                 <Input
                   name="name"
@@ -155,15 +157,13 @@ function Checkout() {
                   value={formik.values.name || ""}
                   invalid={formik.touched.name && formik.errors.name ? true : false}
                 />
-                {formik.touched.name && formik.errors.name ? (
+                {formik.touched.name && formik.errors.name && (
                   <FormFeedback type="invalid">{formik.errors.name}</FormFeedback>
-                ) : null}
+                )}
               </div>
               <div className="mb-3">
                 <Label className="m-0" htmlFor="number">
-                  <b>
-                    Phone number <span className="text-danger">*</span>
-                  </b>
+                  <b>Phone number <span className="text-danger">*</span></b>
                 </Label>
                 <Input
                   name="number"
@@ -175,15 +175,13 @@ function Checkout() {
                   value={formik.values.number || ""}
                   invalid={formik.touched.number && formik.errors.number ? true : false}
                 />
-                {formik.touched.number && formik.errors.number ? (
+                {formik.touched.number && formik.errors.number && (
                   <FormFeedback type="invalid">{formik.errors.number}</FormFeedback>
-                ) : null}
+                )}
               </div>
               <div className="mb-4">
                 <Label className="m-0" htmlFor="email">
-                  <b>
-                    Email <span className="text-danger">*</span>
-                  </b>
+                  <b>Email <span className="text-danger">*</span></b>
                 </Label>
                 <Input
                   name="email"
@@ -194,15 +192,13 @@ function Checkout() {
                   value={user.email}
                   invalid={formik.touched.email && formik.errors.email ? true : false}
                 />
-                {formik.touched.email && formik.errors.email ? (
+                {formik.touched.email && formik.errors.email && (
                   <FormFeedback type="invalid">{formik.errors.email}</FormFeedback>
-                ) : null}
+                )}
               </div>
               <div className="mb-4">
                 <Label className="m-0" htmlFor="address">
-                  <b>
-                    Address <span className="text-danger">*</span>
-                  </b>
+                  <b>Address <span className="text-danger">*</span></b>
                 </Label>
                 <Input
                   type="text"
@@ -212,17 +208,14 @@ function Checkout() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   invalid={formik.touched.address && !!formik.errors.address}
-                  rows={4}
                 />
-                {formik.touched.address && formik.errors.address ? (
+                {formik.touched.address && formik.errors.address && (
                   <FormFeedback>{formik.errors.address}</FormFeedback>
-                ) : null}
+                )}
               </div>
               <div className="mb-4">
                 <Label className="m-0" htmlFor="city">
-                  <b>
-                    City <span className="text-danger">*</span>
-                  </b>
+                  <b>City <span className="text-danger">*</span></b>
                 </Label>
                 <Input
                   type="text"
@@ -232,27 +225,22 @@ function Checkout() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   invalid={formik.touched.city && !!formik.errors.city}
-                  rows={4}
                 />
-                {formik.touched.city && formik.errors.city ? (
+                {formik.touched.city && formik.errors.city && (
                   <FormFeedback>{formik.errors.city}</FormFeedback>
-                ) : null}
+                )}
               </div>
             </div>
             <div className="col-4 border border-warning column-1 order-lg-2 mx-3 mb-3 order-details">
               <div className="d-flex container mt-3 flex-column">
                 <h4>Your Order</h4>
                 <div className="d-flex flex-row container p-0 mt-2">
-                  <span className="me-auto">
-                    <b>Product</b>
-                  </span>
-                  <span className="ms-auto">
-                    <b>Subtotal</b>
-                  </span>
+                  <span className="me-auto"><b>Product</b></span>
+                  <span className="ms-auto"><b>Subtotal</b></span>
                 </div>
                 <hr className="m-0 p-0 " />
               </div>
-              {cartItems.map((item, idx) => (
+              {allItems.map((item, idx) => (
                 <div className="d-flex flex-row container" key={idx}>
                   <span className="text-secondary me-auto mb-2">
                     {item.quantity}x {item.name}
@@ -264,36 +252,22 @@ function Checkout() {
               ))}
               <hr className="m-0 p-0 " />
               <div className="d-flex container my-2">
-                <span className="me-auto">
-                  <b>Subtotal</b>
-                </span>
-                <span className="ms-auto">
-                  <b>Rs. {sum(cartItems.map((item) => item.price))}</b>
-                </span>
+                <span className="me-auto"><b>Subtotal</b></span>
+                <span className="ms-auto"><b>Rs. {sum(allItems.map((item) => item.price))}</b></span>
               </div>
               <hr className="m-0 p-0 " />
               <div className="d-flex container my-2 text-secondary">
-                <span className="me-auto">
-                  <b>Delivery Fee</b>
-                </span>
-                <span className="ms-auto">
-                  <span className="me-3">Flat Rate:</span> Rs. 50
-                </span>
+                <span className="me-auto"><b>Delivery Fee</b></span>
+                <span className="ms-auto"><span className="me-3">Flat Rate:</span> Rs. 50</span>
               </div>
               <hr className="m-0 p-0 " />
               <div className="d-flex container my-2">
-                <span className="me-auto">
-                  <b>Total</b>
-                </span>
-                <span className="ms-auto">
-                  Rs. {sum(cartItems.map((item) => item.price)) + 50}
-                </span>
+                <span className="me-auto"><b>Total</b></span>
+                <span className="ms-auto">Rs. {sum(allItems.map((item) => item.price)) + 50}</span>
               </div>
               <hr className="m-0 p-0 " />
               <div className="container my-2">
-                <span>
-                  <b>Payment Method</b>
-                </span>
+                <span><b>Payment Method</b></span>
                 <div className="form-check">
                   <input
                     className="form-check-input"
@@ -330,8 +304,7 @@ function Checkout() {
         </>
       )}
     </div>
-
   )
 }
 
-export default Checkout
+export default Checkout;

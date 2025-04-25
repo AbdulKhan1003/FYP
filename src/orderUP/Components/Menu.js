@@ -2,13 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import Title from '../ReUsables/Title'
 import { Link } from 'react-router-dom'
 import { MenuContext } from '../AllRestaurants/RestaurantsContext'
-import { useFetchRestaurants } from '../hooks/useFetchRestaurants'
 import ScrollToTopButton from '../ReUsables/ScrollToTopButton'
 import axios from 'axios'
 
 
 const Menu = () => {
-  const { setRestId, setRestName } = useContext(MenuContext)
+  const { setRest, API_URL } = useContext(MenuContext)
   const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
@@ -16,14 +15,13 @@ const Menu = () => {
   })
 
 
-  const restNameAndID = (id, name) => {
-    setRestId(id)
-    setRestName(name)
+  const getRestaurant = (restaurant) => {
+    console.log("Rest is",restaurant)
+    setRest(restaurant)
   }
-
   const fetchRestaurants = async () => {
     try {
-      const { data } = await axios.get("http://192.168.1.7:8080/api/restaurants")
+      const { data } = await axios.get(`${API_URL}/restaurants`)
       if (data) {
         setRestaurants(data.restaurants)
       }
@@ -57,7 +55,7 @@ const Menu = () => {
           </div>
         </div>
         {restaurants?.map((restaurantItems, idx) => {
-          return <div style={{ cursor: 'pointer' }} className='mt-2' key={idx} onClick={() => { restNameAndID(restaurantItems._id, restaurantItems.name) }}>
+          return <div style={{ cursor: 'pointer' }} className='mt-2' key={idx} onClick={() => { getRestaurant(restaurantItems)}}>
             <Link to={`../restaurant/${restaurantItems._id}/items`}
               state={{
                 restaurantName: restaurantItems.name,
@@ -65,7 +63,7 @@ const Menu = () => {
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards">
-              <img src={ `http://192.168.1.7:8080/api/images/${restaurantItems.logo}`} alt="Restaurant Logo" className="card-img-top img-fluid menu-rest-img" />
+              <img src={ `${API_URL}/images/${restaurantItems.logo}`} alt="Restaurant Logo" className="card-img-top img-fluid menu-rest-img" />
                 <div className="card-body pt-1">
                   <div>
                     <h3 className=''>{restaurantItems.name}</h3>

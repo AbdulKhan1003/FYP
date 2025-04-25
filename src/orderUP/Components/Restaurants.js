@@ -5,8 +5,6 @@ import Title from '../ReUsables/Title'
 import { Button } from 'reactstrap'
 import toast, { Toaster } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
-import { useFetchItems } from '../hooks/useFetchItems'
-import { useFetchReviews } from '../hooks/useFetchItemReviews'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUtensils, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom'
@@ -16,8 +14,8 @@ import axios from 'axios'
 
 const Restaurants = () => {
   document.title = "ORDER UP - Products"
+  const { cartItems, setCartItems, rest: restaurant, API_URL } = useContext(MenuContext)
 
-  const { cartItems, setCartItems, restName, restId } = useContext(MenuContext)
   const userProfile = JSON.parse(localStorage.getItem("User"))
   const location = useLocation()
   const navigate = useNavigate()
@@ -27,14 +25,14 @@ const Restaurants = () => {
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('')
-  
-  
-  const [ items, setItems ] = useState(null)
-  const [ reviews, setReviews ] = useState(null)
+
+
+  const [items, setItems] = useState(null)
+  const [reviews, setReviews] = useState(null)
 
   const fetchItems = async () => {
     try {
-      const { data } = await axios.get(`http://192.168.1.7:8080/api/restaurant/${location.state?.restaurantId}/items`)
+      const { data } = await axios.get(`${API_URL}/restaurant/${location.state?.restaurantId}/items`)
       if (data) {
         setItems(data.items)
       }
@@ -43,12 +41,13 @@ const Restaurants = () => {
     }
   }
   useEffect(() => {
+    console.log("Rest", location.state?.restaurant)
     fetchItems()
   }, []);
 
   const fetchItemReviews = async () => {
     try {
-      const { data } = await axios.get(`http://192.168.1.7:8080/api/restaurant/item/${item._id}/reviews`)
+      const { data } = await axios.get(`${API_URL}/restaurant/item/${item._id}/reviews`)
       if (data) {
         console.log(data)
         setReviews(data.reviews)
@@ -61,15 +60,15 @@ const Restaurants = () => {
   const handleItemReviewPost = async (e) => {
     e.preventDefault()
     try {
-      if(rating===0){
+      if (rating === 0) {
         Swal.fire({
           title: "Error",
           text: "Please select stars(1-5)",
           icon: "warning"
         });
       }
-      else{
-        const { data } = await axios.post(`http://192.168.1.7:8080/api/restaurant/item/${item._id}/reviews/${userProfile._id}`, {
+      else {
+        const { data } = await axios.post(`${API_URL}/restaurant/item/${item._id}/reviews/${userProfile._id}`, {
           rating,
           comment: review
         })
@@ -87,7 +86,7 @@ const Restaurants = () => {
         icon: "warning"
       });
     }
-    finally{
+    finally {
       setRating(0)
       setReview('')
     }
@@ -106,86 +105,126 @@ const Restaurants = () => {
   }, [cartItems])
 
   useEffect(() => {
-    const Price = sum(cartItems.map(item => item.price))
-    const count = sum(cartItems.map(item => item.quantity))
-    setTotalPrice(Price)
-    setTotalCount(count)
+    const allItems = cartItems.flatMap(rest => rest.order);
+
+    const totalPrice = allItems.reduce((sum, item) => sum + item.price, 0);
+    const totalCount = allItems.reduce((sum, item) => sum + item.quantity, 0);
+    
+    setTotalPrice(totalPrice)
+    setTotalCount(totalCount)
   }, [cartItems])
   const sum = items => { return items.reduce((prevVal, currVal) => prevVal + currVal, 0) }
 
   const removeItem = (id) => {
-    const filteredItems = cartItems.filter(cart => cart._id !== id)
-    setCartItems(filteredItems)
-  }
-
+    const updatedCart = cartItems.map((restaurant) => {
+      const filteredOrder = restaurant.order.filter(item => item._id !== id);
+  
+      return {
+        ...restaurant,
+        order: filteredOrder,
+      };
+    });
+  
+    setCartItems(updatedCart);
+  };
+  
   const AddQty = (prodItem) => {
-    const existingProduct = cartItems.find(item => item._id === prodItem._id);
+    const existingProduct = cartItems
+      .flatMap((rest) => rest.order)
+      .find((item) => item._id === prodItem._id);
+
     setCartItems(
-      cartItems.map((item) => {
-        if (existingProduct === item) {
-          const unitPrice = item.price / (item.quantity || 1);
-          return {
-            ...item,
-            quantity: (item.quantity || 0) + 1,
-            price: item.price + unitPrice
-          };
-        } else {
-          return item;
-        }
+      cartItems.map((restaurant) => {
+        return {
+          ...restaurant,
+          order: restaurant.order.map((item) => {
+            if (item._id === existingProduct._id) {
+              const unitPrice = item.price / (item.quantity || 1);
+              return {
+                ...item,
+                quantity: (item.quantity || 0) + 1,
+                price: item.price + unitPrice,
+              };
+            } else {
+              return item;
+            }
+          }),
+        };
       })
     );
+
   };
 
   const RemoveQty = (prodItem) => {
-    const existingProduct = cartItems.find(item => item._id === prodItem._id);
+    const existingProduct = cartItems
+      .flatMap((rest) => rest.order)
+      .find((item) => item._id === prodItem._id);
+
     setCartItems(
-      cartItems.map((item) => {
-        if (existingProduct === item) {
-          if (item.quantity === 1) {
-          }
-          const unitPrice = item.price / (item.quantity || 1);
-          return {
-            ...item,
-            quantity: item.quantity > 1 ? item.quantity - 1 : 0,
-            price: item.quantity > 1 ? item.price - unitPrice : item.price
-          };
-        } else {
-          return item;
-        }
+      cartItems.map((restaurant) => {
+        return {
+          ...restaurant,
+          order: restaurant.order.map((item) => {
+            if (item._id === existingProduct._id) {
+              const unitPrice = item.price / (item.quantity || 1);
+              return {
+                ...item,
+                quantity: (item.quantity || 0) + 1,
+                price: item.price + unitPrice,
+              };
+            } else {
+              return item;
+            }
+          }),
+        };
       })
     );
+
   };
 
-  const AddProduct = (prod, newRestId, newRestName) => {
-    const existingProduct = cartItems.find(item => item._id === prod._id);
+  const AddProduct = (currentItem, currentRestaurant, quantity = 1) => {
+    if (!currentItem || !currentRestaurant) return;
 
-    if (existingProduct) {
-      setCartItems(
-        cartItems.map((item) => {
-          if (existingProduct === item) {
-            const unitPrice = item.price / (item.quantity ? item.quantity : 1);
-            return {
-              ...item,
-              quantity: item.quantity ? item.quantity + 1 : 1,
-              price: item.price + unitPrice
-              // Do not update restId and restName for existing products
-            };
-          } else {
-            return item;
-          }
-        })
+    const newCartItem = {
+      _id: currentItem._id,
+      name: currentItem.name,
+      image: currentItem.image,
+      price: currentItem.price,
+      quantity: quantity,
+    };
+
+    const restaurantCartItem = {
+      restaurant: {
+        _id: currentRestaurant._id,
+        name: currentRestaurant.name,
+        logo: currentRestaurant.logo,
+        phone: currentRestaurant.phone,
+      },
+      order: [newCartItem],
+    };
+    // toast.success(`${currentItem.name} added `);
+    setCartItems((prevCart) => {
+      const existingRestaurantIndex = (prevCart || []).findIndex(
+        (item) => item.restaurant._id === currentRestaurant._id
       );
-      toast.success(`Quantity of ${prod.name} increased `);
-    } else {
-      const newProduct = {
-        ...prod,
-        quantity: 1,
-        restId: restId,
-        restName: restName
-      };
-      toast.success(`${prod.name} added `);
-      setCartItems([...cartItems, newProduct]);
-    }
+
+      if (existingRestaurantIndex === -1) {
+        return [...(prevCart || []), restaurantCartItem];
+      }
+
+      const updatedCart = [...(prevCart || [])];
+      const existingItemIndex = updatedCart[existingRestaurantIndex].order
+        .findIndex((item) => item._id === currentItem._id);
+
+      if (existingItemIndex === -1) {
+        updatedCart[existingRestaurantIndex].order.push(newCartItem);
+      } else {
+        updatedCart[existingRestaurantIndex].order[existingItemIndex].quantity
+          += quantity;
+      }
+
+      return updatedCart;
+    });
   };
 
   const truncateText = (text, charLimit) => {
@@ -241,12 +280,8 @@ const Restaurants = () => {
                 data-bs-toggle="offcanvas"
                 data-bs-target={`#offcanvasProduct-${prod._id}`}
                 aria-controls={`offcanvasProduct-${prod.id}`}
-                onClick={
-                  () => {
-                  console.log("Clicked")
-                  setItem(prod)}
-                }>
-                <img src={ `http://192.168.1.7:8080/api/images/${prod.image}`} className="card-img-top menu-rest-img img-fluid" alt="..." />
+                onClick={() => { setItem(prod) }}>
+                <img src={`${API_URL}/images/${prod.image}`} className="card-img-top menu-rest-img img-fluid" alt="..." />
                 <div className="card-body pt-1 pb-0">
                   <h4 className="card-title mt-0">{prod.name}</h4>
                   <p className="text-secondary mb-2">{truncateText(prod.description, 100)}</p>
@@ -258,7 +293,7 @@ const Restaurants = () => {
                   <p className="text-dark mt-2 fs-5 mb-0">Rs.{prod.price}</p>
                   <p className="badge bg-info text-dark fs-5 mt-2">{prod.category}</p>
                   {prod.size && prod.size.map((items, index) => (
-                    <Button key={index} className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
+                    <Button className='btn btn-sm btn-light btn-outline-success me-3'>{items}</Button>
                   ))}
                   <br />
 
@@ -267,7 +302,7 @@ const Restaurants = () => {
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasCart"
                     aria-controls="offcanvasCart"
-                    onClick={() => AddProduct(prod)}>
+                    onClick={() => AddProduct(prod, restaurant)}>
                     Add to Cart
                   </Button>
                 </div>
@@ -281,7 +316,7 @@ const Restaurants = () => {
                   <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
-                  <img src={ `http://192.168.1.7:8080/api/images/${prod.image}`} className="img-fluid mb-3" alt={prod.name} />
+                  <img src={`${API_URL}/images/${prod.image}`} className="img-fluid mb-3" alt={prod.name} />
                   <h5 className="offcanvas-title" id={`offcanvasProductLabel-${prod.pID}`}>{prod.name}</h5>
                   <p>{prod.description}</p>
                   <p><strong>Price:</strong> Rs.{prod.price}</p>
@@ -310,7 +345,7 @@ const Restaurants = () => {
                         </svg>
                       ))}
                     </div>
-                    <input type="text" required placeholder='What do u think?' value={review} onChange={(e)=> setReview(e.target.value)} className="form-control mt-2 mb-2" aria-label="Text input with radio button" />
+                    <input type="text" required placeholder='What do u think?' value={review} onChange={(e) => setReview(e.target.value)} className="form-control mt-2 mb-2" aria-label="Text input with radio button" />
                     <Button className='btn-info btn-sm d-flex ms-auto mt-1'>Post Review</Button>
                   </form>
                   <hr />
@@ -318,7 +353,7 @@ const Restaurants = () => {
                   {reviews !== null && reviews.map((review, idx) => {
                     return <div key={idx} className='mt-4'>
                       <div className="photo-name d-flex align-items-center">
-                        <img className="rounded-circle float-start me-3" style={{ width: "12%" }} src={ `http://192.168.1.7:8080/api/images/${review.userId.profilePicture}`} alt="" />
+                        <img className="rounded-circle float-start me-3" style={{ width: "12%" }} src={`${API_URL}/images/${review.userId.profilePicture}`} alt="" />
                         <p className='m-0 p-0' style={{ fontSize: '12px' }}>{review.userId.name}</p>
                       </div>
                       <div className="d-flex mt-2" style={{ fontSize: '0.7rem' }}>
@@ -359,20 +394,35 @@ const Restaurants = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {cartItems.map((item, idx) => (
-                            <tr key={idx}>
-                              <td style={{ width: '30%' }}>{item.name}</td>
-                              <td>
-                                <FontAwesomeIcon className={`px-2 ${item.quantity <= 1 ? 'disabled-icon' : ''}`} icon={faMinus} style={{ color: 'red' }} onClick={() => { if (item.quantity > 1) RemoveQty(item); }} />
-                                <span className='fs-6 mx-1'>{item.quantity ? item.quantity : 1}</span>
-                                <FontAwesomeIcon className={`px-2 ${item.quantity >= 10 ? 'disabled-icon' : ''}`} icon={faPlus} style={{ color: 'green' }} onClick={() => { AddQty(item) }} />
-                              </td>
-                              <td>{item.price}</td>
-                              <td>
-                                <button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button>
-                              </td>
-                            </tr>
-                          ))}
+                          {cartItems.map((rest) =>
+                            rest.order.map((item) => (
+                              <tr key={item._id}>
+                                <td style={{ width: '30%' }}>{item.name}</td>
+                                <td>
+                                  <FontAwesomeIcon
+                                    className={`px-2 ${item.quantity <= 1 ? 'disabled-icon' : ''}`}
+                                    icon={faMinus}
+                                    style={{ color: 'red' }}
+                                    onClick={() => {
+                                      if (item.quantity > 1) RemoveQty(item);
+                                    }}
+                                  />
+                                  <span className='fs-6 mx-1'>{item.quantity ? item.quantity : 1}</span>
+                                  <FontAwesomeIcon
+                                    className={`px-2 ${item.quantity >= 10 ? 'disabled-icon' : ''}`}
+                                    icon={faPlus}
+                                    style={{ color: 'green' }}
+                                    onClick={() => AddQty(item)}
+                                  />
+                                </td>
+                                <td>{item.price}</td>
+                                <td>
+                                  <button className='btn btn-sm rounded-pill btn-outline-danger' onClick={() => removeItem(item._id)}>Remove</button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+
                         </tbody>
                       </table>
                       <div className="d-flex justify-content-end me-3">
