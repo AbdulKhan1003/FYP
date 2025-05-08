@@ -111,29 +111,34 @@ footer {
 } */
 
 .contact-Img {
-  width: 100vw;  /* Full width */
-  height: 60vh;  /* Fixed height */
+  width: 100vw;
+  /* Full width */
+  height: 60vh;
+  /* Fixed height */
   /* object-fit: cover; */
 }
 
 @media screen and (max-width:850px) {
   .contact-Img {
-    width: 100vw; 
+    width: 100vw;
     height: 40vh;
-  }  
-} 
+  }
+}
+
 @media screen and (max-width:500px) {
   .contact-Img {
-    width: 100vw; 
+    width: 100vw;
     height: 30vh;
-  }  
-} 
+  }
+}
+
 @media screen and (max-width:450px) {
   .contact-Img {
-    width: 100vw; 
+    width: 100vw;
     height: 20vh;
-  }  
-} 
+  }
+}
+
 .contact-bg {
   border: 1px solid black;
   box-shadow: 3px 5px;
@@ -220,7 +225,7 @@ footer {
 
 .profile-orders:hover {
   background-color: #f4eaea;
-  border: 2px solid rgba(255, 0, 0, 0.2) !important;
+  border: 2px solid rgba(255, 0, 0, 0.1) !important;
 }
 
 .prodImg {
@@ -535,34 +540,82 @@ footer {
   background-color: transparent !important;
 }
 
-.searchBar{
+.searchBar {
   width: 20vw;
   margin-left: auto;
 }
 
 @media screen and (max-width: 900px) {
-  .searchBar{
+  .searchBar {
     width: 30vw;
     margin-left: auto;
   }
 }
+
 @media screen and (max-width: 600px) {
-  .searchBar{
+  .searchBar {
     width: 40vw;
     margin-left: auto;
   }
 }
-.responsive-map{
+
+.responsive-map {
   overflow: hidden;
   height: 0;
   padding-bottom: 30%;
   position: relative;
 }
-.responsive-map iframe{
+
+.responsive-map iframe {
   border: 0;
   height: 100%;
   width: 100%;
   left: 0;
   top: 0;
   position: absolute;
+}
+
+@media screen and (max-width:1000px) {
+  .profile-main {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-image-div{
+    display: flex;
+    justify-content: center;
+    width: 28% !important;
+  }
+  .prof-img {
+    width: 60% !important;
+  }
+  .edit-icon{
+    right: 12% !important; 
+  }
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width:800px) {
+  .order-buttons {
+    width: 75% !important;
+  }
+}
+@media screen and (max-width:460px) {
+  .order-buttons {
+    width: 95% !important;
+  }
+  .profile-image-div{
+    display: flex;
+    justify-content: center;
+    width: 100% !important;
+  }
+  .prof-img {
+    width: 25% !important;
+  }
+  .edit-icon{
+    right: 33% !important; 
+  }
 }

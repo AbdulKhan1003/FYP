@@ -8,7 +8,8 @@ import axios from 'axios'
 
 const Menu = () => {
   const { setRest, API_URL } = useContext(MenuContext)
-  const [restaurants, setRestaurants] = useState([])
+  const [restaurants, setRestaurants] = useState(null)
+  const [allRest, setAllRest] = useState(null)
 
   useEffect(() => {
     document.title = "ORDER UP - Menu"
@@ -24,6 +25,7 @@ const Menu = () => {
       const { data } = await axios.get(`${API_URL}/restaurants`)
       if (data) {
         setRestaurants(data.restaurants)
+        setAllRest(data.restaurants)
       }
     } catch (error) {
       console.log(error)
@@ -33,14 +35,15 @@ const Menu = () => {
     fetchRestaurants()
   }, []);
 
-
   const handleSearch = (e) => {
-    setTimeout(() => {
-      setRestaurants(restaurants.filter((rest) => rest.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setAllRest(restaurants.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
       );
-    }, 500)
-
-  }
+    if(e.target.value===""){
+      setAllRest(restaurants)
+      console.log("Empty")
+    }
+  };
+  
 
   if (restaurants) {
     console.log('restaurants:', restaurants)
@@ -54,8 +57,8 @@ const Menu = () => {
             />
           </div>
         </div>
-        {restaurants?.map((restaurantItems, idx) => {
-          return <div style={{ cursor: 'pointer' }} className='mt-2' key={idx} onClick={() => { getRestaurant(restaurantItems)}}>
+        {allRest?.map((restaurantItems, idx) => {
+          return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx} onClick={() => { getRestaurant(restaurantItems)}}>
             <Link to={`../restaurant/${restaurantItems._id}/items`}
               state={{
                 restaurantName: restaurantItems.name,
@@ -63,7 +66,7 @@ const Menu = () => {
               }}
               style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards">
-              <img src={ `${API_URL}/images/${restaurantItems.logo}`} alt="Restaurant Logo" className="card-img-top img-fluid menu-rest-img" />
+              <img loading='lazy' src={ `${API_URL}/images/${restaurantItems.logo}`} alt="Restaurant Logo" className="card-img-top img-fluid menu-rest-img" />
                 <div className="card-body pt-1">
                   <div>
                     <h3 className=''>{restaurantItems.name}</h3>

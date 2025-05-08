@@ -7,8 +7,8 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const {cartQuantity} = useContext(MenuContext)
-  const userProfile = JSON.parse(localStorage.getItem("User"))
-  const fullName = userProfile.name
+  const {user} = useContext(MenuContext)
+  const fullName = user.name
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm mx-2">
       <Link to="/home" className="navbar-brand fw-bold text-success m-0 p-0 ms-4">
@@ -42,8 +42,7 @@ function Navbar() {
               <button type="button" className="btn btn-outline-success">
                 <i className="bi bi-person-fill"></i>
                 {/* full name or first name whatever you want here */}
-                <span>{userProfile===null || userProfile===undefined?"Guest":`${fullName}`}</span>
-                {console.log("user",userProfile)}
+                <span>{user===null || user===undefined?"Guest":`${fullName}`}</span>
               </button>
             </Link>
           </li>

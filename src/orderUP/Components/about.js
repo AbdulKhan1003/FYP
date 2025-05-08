@@ -25,17 +25,17 @@ const About = () => {
         <Title size='6' heading="Meet the Team" />
         <div className="d-flex justify-content-around mt-5 flex-wrap">
           <div className='d-flex flex-column'>
-            <img src="https://placehold.co/100x100" className="rounded-circle team-image border border-dark" alt="Team Member" />
+            <img loading='lazy' src="https://placehold.co/100x100" className="rounded-circle team-image border border-dark" alt="Team Member" />
             <h3 className='my-3 text-center'>Talha Zubair</h3>
             <p className='text-center text-warning'>Designer & Documentor</p>
           </div>
           <div className='d-flex flex-column'>
-            <img src="https://placehold.co/100x100" className='rounded-circle team-image border border-dark' alt="" />
+            <img loading='lazy' src="https://placehold.co/100x100" className='rounded-circle team-image border border-dark' alt="" />
             <h3 className='my-3 text-center'>Abdul Hadi Khan</h3>
             <p className='text-center text-warning'>FrontEnd Developer & Tester</p>
           </div>
           <div className='d-flex flex-column'>
-            <img src='https://placehold.co/100x100' className='rounded-circle team-image border border-dark' alt="" />
+            <img loading='lazy' src='https://placehold.co/100x100' className='rounded-circle team-image border border-dark' alt="" />
             <h3 className='my-3 text-center'>Ahsan Naeem</h3>
             <p className='text-center text-warning'>Full Stack Developer & Tester</p>
           </div>
@@ -53,7 +53,7 @@ const About = () => {
             <p className="fs-6">Relax at home or with friends while we work tirelessly to bring your favorite dishes right to your doorstep.</p>
           </div>
           <div className="col-md-6 text-center">
-            <img src="about-delivery-img.avif" className="img-fluid rounded-3" style={{ width: '90%' }} alt="Food Delivery" />
+            <img loading='lazy' src="about-delivery-img.avif" className="img-fluid rounded-3" style={{ width: '90%' }} alt="Food Delivery" />
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ const About = () => {
         </div>
         <div className="col-md-6 column-2">
           <center>
-            <img src="register.png" className='' style={{ width: '85%' }} alt="" />
+            <img loading='lazy' src="register.png" className='' style={{ width: '85%' }} alt="" />
           </center>
         </div>
       </div>

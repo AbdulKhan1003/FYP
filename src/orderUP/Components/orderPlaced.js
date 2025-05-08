@@ -5,9 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 const OrderPlaced = () => {
     const { setPage } = useContext(MenuContext);
     const [count, setCount] = useState(10);
-    const navigate = useNavigate(); // Initialize useNavigate for redirection
+    const navigate = useNavigate()
 
-    // Countdown effect
     useEffect(() => {
         if (count > 0) {
             const timer = setTimeout(() => {
@@ -15,21 +14,20 @@ const OrderPlaced = () => {
             }, 1000);
             return () => clearTimeout(timer);
         } else {
-            navigate("/profile#Orders"); // Redirect when count reaches 0
+            navigate("/profile#Orders");
         }
-    }, [count, navigate]); // Depend on count and navigate
+    }, [count, navigate]); 
 
-    // Set page and document title
     useEffect(() => {
         document.title = "ORDER UP - Order Placed";
         setPage("OrderPlaced");
-    }, [setPage]); // Added `setPage` to dependency array
+    }, [setPage]);
 
     return (
         <div className="orderPlaced">
             <div className="order-box">
                 <div className="box d-flex flex-column align-items-center">
-                    <img
+                    <img loading='lazy'
                         src="https://cdn.pixabay.com/photo/2017/01/13/01/22/ok-1976099_1280.png"
                         style={{ width: "150px", height: "150px" }}
                         alt="Order Success"

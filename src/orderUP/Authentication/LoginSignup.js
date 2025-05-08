@@ -184,23 +184,6 @@ useEffect(()=>{
               <FormFeedback className='feedback-form'  >{formik.errors.password}</FormFeedback>
             ) : null}
           </div>
-          {action === 'SignUp' && <div className='Picture picDiv m-4'>
-            <img src='pic.png' alt="" />
-            <Input
-              type="file"
-              name="profilePicture"
-              className='w-100'
-              onChange={(event) => {
-                const file = event.currentTarget.files[0];
-                if (file) {
-                  formik.setFieldValue('profilePicture', file);
-                }
-              }}
-              onBlur={formik.handleBlur}
-              invalid={formik.touched.profilePicture && !!formik.errors.profilePicture}
-            >
-            </Input>
-          </div>}
           <div className='d-flex justify-content-center flex-wrap mb-5'>
             <Button type='submit' className={`btn btn-purple btn-outline-success me-3 ms-3`}>{action === "Login" ? 'Login' : 'SignUp'}</Button>
           </div>

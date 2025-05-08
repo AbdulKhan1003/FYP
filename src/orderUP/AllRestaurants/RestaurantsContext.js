@@ -6,7 +6,6 @@ const RestaurantsContext = (props) => {
     const [cartItems, setCartItems] = useState(
         JSON.parse(localStorage.getItem('Cart Items')) || []
     );
-
     const [rest, setRest] = useState(null)
     const [cartQuantity, setCartQuantity] = useState(0)
     const [page, setPage] = useState(null)
@@ -14,7 +13,9 @@ const RestaurantsContext = (props) => {
         JSON.parse(localStorage.getItem('User')) || {}
     );
     const [order, setOrder] = useState(false)
-    const API_URL = "http://192.168.1.7:8080/api"
+    const [userLocation, setUserLocation] = useState({ lat: null, lng: null });
+    const [riderLocation, setRiderLocation] = useState({ lat: null, lng: null });
+    const API_URL = "http://192.168.1.11:8080/api"
 
 
     useEffect(() => {
@@ -32,9 +33,10 @@ const RestaurantsContext = (props) => {
     }, [user]);
 
 
+
     return (
         <MenuContext.Provider value={{
-            cartItems, setCartItems, rest, setRest,
+            cartItems, setCartItems, rest, setRest, userLocation, setUserLocation, riderLocation, setRiderLocation,
             cartQuantity, setCartQuantity, user, setUser, page, setPage, order, setOrder, API_URL
         }}>
             {props.children}

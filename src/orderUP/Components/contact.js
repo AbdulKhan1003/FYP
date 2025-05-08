@@ -78,7 +78,7 @@ function Contact() {
   return (
     <>
       <div className="contact-page">
-        <img className="contact-Img" src="contact-us2.jpg" alt="Contact Us" />
+        <img loading='lazy' className="contact-Img" src="contact-us2.jpg" alt="Contact Us" />
         <div className="container mt-5">
           <p>
             Welcome to <strong>Order Up</strong>, we’re always eager to hear from you. Whether you want to
@@ -138,7 +138,7 @@ function Contact() {
                 {imagePreview && (
                   <div className="mt-2">
                     <h5>Image Preview:</h5>
-                    <img src={imagePreview} alt="Preview" style={{ width: '100px', height: 'auto' }} />
+                    <img loading='lazy' src={imagePreview} alt="Preview" style={{ width: '100px', height: 'auto' }} />
                   </div>
                 )}
               </div>

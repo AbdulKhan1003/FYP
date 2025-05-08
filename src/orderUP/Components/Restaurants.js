@@ -22,9 +22,9 @@ const Restaurants = () => {
   const [item, setItem] = useState(null)
   const [totalPrice, setTotalPrice] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('')
+  const [allItems, setAllItems] = useState(null)
 
 
   const [items, setItems] = useState(null)
@@ -35,13 +35,13 @@ const Restaurants = () => {
       const { data } = await axios.get(`${API_URL}/restaurant/${location.state?.restaurantId}/items`)
       if (data) {
         setItems(data.items)
+        setAllItems(data.items)
       }
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(() => {
-    console.log("Rest", location.state?.restaurant)
     fetchItems()
   }, []);
 
@@ -49,18 +49,33 @@ const Restaurants = () => {
     try {
       const { data } = await axios.get(`${API_URL}/restaurant/item/${item._id}/reviews`)
       if (data) {
-        console.log(data)
+        console.log('Review', data)
         setReviews(data.reviews)
       }
     } catch (error) {
-      console.log(error)
+      console.log('error', error)
     }
   }
 
   const handleItemReviewPost = async (e) => {
     e.preventDefault()
     try {
-      if (rating === 0) {
+      const existingReviewer = {
+        itemId: item._id,
+        userId: userProfile._id
+      }
+      const hasReviewed = reviews.some((review) =>
+        existingReviewer.itemId === review.itemId &&
+        existingReviewer.userId === review.userId._id
+      );
+      if (hasReviewed) {
+        Swal.fire({
+          title: "Error",
+          text: "You have already reviewed this item.",
+          icon: "warning"
+        });
+      }
+      else if (rating === 0) {
         Swal.fire({
           title: "Error",
           text: "Please select stars(1-5)",
@@ -94,7 +109,6 @@ const Restaurants = () => {
 
   useEffect(() => {
     if (item) {
-      console.log('Called')
       fetchItemReviews()
     }
   }, [item])
@@ -109,7 +123,7 @@ const Restaurants = () => {
 
     const totalPrice = allItems.reduce((sum, item) => sum + item.price, 0);
     const totalCount = allItems.reduce((sum, item) => sum + item.quantity, 0);
-    
+
     setTotalPrice(totalPrice)
     setTotalCount(totalCount)
   }, [cartItems])
@@ -118,16 +132,16 @@ const Restaurants = () => {
   const removeItem = (id) => {
     const updatedCart = cartItems.map((restaurant) => {
       const filteredOrder = restaurant.order.filter(item => item._id !== id);
-  
+
       return {
         ...restaurant,
         order: filteredOrder,
       };
     });
-  
+
     setCartItems(updatedCart);
   };
-  
+
   const AddQty = (prodItem) => {
     const existingProduct = cartItems
       .flatMap((rest) => rest.order)
@@ -202,7 +216,6 @@ const Restaurants = () => {
       },
       order: [newCartItem],
     };
-    // toast.success(`${currentItem.name} added `);
     setCartItems((prevCart) => {
       const existingRestaurantIndex = (prevCart || []).findIndex(
         (item) => item.restaurant._id === currentRestaurant._id
@@ -250,10 +263,11 @@ const Restaurants = () => {
   };
 
   const handleSearch = (e) => {
-    setTimeout(() => {
-      setItems(items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
-      );
-    }, 500)
+    setAllItems(items.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    );
+    if (e.target.value === "") {
+      setAllItems(items)
+    }
   }
 
 
@@ -262,7 +276,6 @@ const Restaurants = () => {
   }, [reviews])
 
   if (items) {
-    console.log(items)
     return (
       <div>
         <div className='menu-bg container pt-3'>
@@ -274,14 +287,14 @@ const Restaurants = () => {
               />
             </div>
           </div>
-          {items.map((prod, idx) => {
+          {allItems.map((prod, idx) => {
             return <div style={{ cursor: 'pointer' }} className='mt-5' key={idx}>
               <div className="card d-flex flex-lg-row mb-5 options menu-rest-cards"
                 data-bs-toggle="offcanvas"
                 data-bs-target={`#offcanvasProduct-${prod._id}`}
                 aria-controls={`offcanvasProduct-${prod.id}`}
                 onClick={() => { setItem(prod) }}>
-                <img src={`${API_URL}/images/${prod.image}`} className="card-img-top menu-rest-img img-fluid" alt="..." />
+                <img loading='lazy' src={`${API_URL}/images/${prod.image}`} className="card-img-top menu-rest-img img-fluid" alt="..." />
                 <div className="card-body pt-1 pb-0">
                   <h4 className="card-title mt-0">{prod.name}</h4>
                   <p className="text-secondary mb-2">{truncateText(prod.description, 100)}</p>
@@ -316,7 +329,7 @@ const Restaurants = () => {
                   <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
-                  <img src={`${API_URL}/images/${prod.image}`} className="img-fluid mb-3" alt={prod.name} />
+                  <img loading='lazy' src={`${API_URL}/images/${prod.image}`} className="img-fluid mb-3" alt={prod.name} />
                   <h5 className="offcanvas-title" id={`offcanvasProductLabel-${prod.pID}`}>{prod.name}</h5>
                   <p>{prod.description}</p>
                   <p><strong>Price:</strong> Rs.{prod.price}</p>
@@ -353,7 +366,7 @@ const Restaurants = () => {
                   {reviews !== null && reviews.map((review, idx) => {
                     return <div key={idx} className='mt-4'>
                       <div className="photo-name d-flex align-items-center">
-                        <img className="rounded-circle float-start me-3" style={{ width: "12%" }} src={`${API_URL}/images/${review.userId.profilePicture}`} alt="" />
+                        <img loading='lazy' className="rounded-circle float-start me-3" style={{ width: "12%" }} src={`${API_URL}/images/${review.userId.profilePicture}` || 'default-img.webp'} alt="" />
                         <p className='m-0 p-0' style={{ fontSize: '12px' }}>{review.userId.name}</p>
                       </div>
                       <div className="d-flex mt-2" style={{ fontSize: '0.7rem' }}>

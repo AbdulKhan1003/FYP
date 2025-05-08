@@ -59,11 +59,6 @@ function Checkout() {
           estimatedDeliveryTime: "30 mins",
           notes:'Add Extra Things'
         })
-        Swal.fire({
-          title: "Success",
-          text: data.message,
-          icon: "success"
-        });
     const allItems = cartItems.flatMap(item => item.order)
         setUser((prevUser) => ({
           ...prevUser,
@@ -83,48 +78,6 @@ function Checkout() {
         });
       }
 
-      // console.log("Form val", values)
-      // const data = new FormData();
-      // data.append('name', values.name);
-      // data.append('email', user.email);
-      // data.append('number', values.number);
-      // data.append('address', values.address);
-      // data.append('Order', cartItems.map(item => item.name).join('\n'));
-      // data.append("access_key", "5f7651c2-7a4a-4676-b9dc-df9460a25ad5");
-
-      // const json = JSON.stringify(Object.fromEntries(data));
-
-      // const res = await fetch("https://api.web3forms.com/submit", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "application/json"
-      //   },
-      //   body: json
-      // }).then((res) => res.json());
-
-      // if (res.success) {
-      //   console.log("Submitted")
-      //   const timestamp = Date.now();
-      //   const date = new Date(timestamp);
-      //   const year = date.getFullYear();
-      //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      //   const day = date.getDate().toString().padStart(2, '0');
-      //   const formattedDate = `${year}-${month}-${day}`;
-
-      //   setOrder(true)
-      //   const order = {
-      //     items: cartItems.map(item => item.name).join('\n'),
-      //     date: formattedDate,
-      //     total: sum(cartItems.map((item) => item.price))
-      //   };
-      //   setUser(prevUser => ({
-      //     ...prevUser,
-      //     orderHistory: [...(prevUser.orderHistory || []), order]
-      //   }));
-      //   navigate("/orderComplete")
-      //   setCartItems([])
-      // }
     }
   });
 
