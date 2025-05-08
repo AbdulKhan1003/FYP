@@ -121,13 +121,12 @@ const Restaurants = () => {
   useEffect(() => {
     const allItems = cartItems.flatMap(rest => rest.order);
 
-    const totalPrice = allItems.reduce((sum, item) => sum + item.price, 0);
+    const totalPrice = allItems.reduce((sum, item) => sum + item.price , 0);
     const totalCount = allItems.reduce((sum, item) => sum + item.quantity, 0);
 
     setTotalPrice(totalPrice)
     setTotalCount(totalCount)
   }, [cartItems])
-  const sum = items => { return items.reduce((prevVal, currVal) => prevVal + currVal, 0) }
 
   const removeItem = (id) => {
     const updatedCart = cartItems.map((restaurant) => {
@@ -183,8 +182,8 @@ const Restaurants = () => {
               const unitPrice = item.price / (item.quantity || 1);
               return {
                 ...item,
-                quantity: (item.quantity || 0) + 1,
-                price: item.price + unitPrice,
+                quantity: (item.quantity || 0) -1,
+                price: item.price - unitPrice,
               };
             } else {
               return item;
@@ -220,24 +219,28 @@ const Restaurants = () => {
       const existingRestaurantIndex = (prevCart || []).findIndex(
         (item) => item.restaurant._id === currentRestaurant._id
       );
-
+    
       if (existingRestaurantIndex === -1) {
         return [...(prevCart || []), restaurantCartItem];
       }
-
+    
       const updatedCart = [...(prevCart || [])];
       const existingItemIndex = updatedCart[existingRestaurantIndex].order
         .findIndex((item) => item._id === currentItem._id);
-
+    
       if (existingItemIndex === -1) {
         updatedCart[existingRestaurantIndex].order.push(newCartItem);
       } else {
-        updatedCart[existingRestaurantIndex].order[existingItemIndex].quantity
-          += quantity;
+        const existingItem = updatedCart[existingRestaurantIndex].order[existingItemIndex];
+        const unitPrice = existingItem.price / existingItem.quantity;
+    
+        existingItem.quantity += quantity;
+        existingItem.price += unitPrice * quantity;
       }
-
+    
       return updatedCart;
     });
+    
   };
 
   const truncateText = (text, charLimit) => {

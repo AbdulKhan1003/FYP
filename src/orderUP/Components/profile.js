@@ -10,7 +10,7 @@ function Profile() {
   const [clickCount, setClickCount] = useState(0)
   const nav = useNavigate()
   const [image, setImage] = useState(null)
-  const { setUser, setCartItems, user, API_URL, userLocation, setUserLocation, riderLocation, setRiderLocation, setIsOrdered} = useContext(MenuContext)
+  const { setUser, setCartItems, user, API_URL, userLocation, setUserLocation, setRiderLocation} = useContext(MenuContext)
   
   const allOrders = user.orderHistory.flatMap((order, orderIndex) =>
     order.map((item) => ({
@@ -183,10 +183,10 @@ function Profile() {
                         <p key={item._id} className="mb-0">{item.name} <span className="text-secondary ms-1"> x {item.quantity} </span></p>
                       ))}
                       </div>
-                        <span className="fw-bold float-end">Total: Rs.{items.reduce((sum, item) => sum + item.price, 0)}</span>
+                        <span className="fw-bold float-end">Total: Rs.{items.reduce((sum, item) => sum + item.price, 0) + 50}</span>
                         <br />
                         <button onClick={()=>{trackOrderRedirect(items)}} className="btn float-end btn-info mt-2">Track Order</button>
-                        <div className="d-flex justify-content-center">Progress:</div> {/* Progress bar lga kr agr progress btw 70-100 to isOrdred ko true krna  */}
+                        <div className="d-flex justify-content-center/">Progress:</div> {/* Progress bar lga kr agr progress btw 70-100 to isOrdred ko true krna  */}
                     </li>
                   ))}
 

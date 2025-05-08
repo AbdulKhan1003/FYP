@@ -48,6 +48,11 @@ function Checkout() {
     onSubmit: async (values, { resetForm }) => {
       console.log("Submit", values)
       console.log(cartItems)
+      const allItems = cartItems.flatMap(rest => rest.order);
+      const totalPrice = allItems.reduce((sum, item) => sum + item.price, 0);
+      const adjustedTotalPrice = totalPrice + 50;
+      console.log(adjustedTotalPrice)
+
       try {
         const { data } = await axios.post(`${API_URL}/checkout`, {
           userId: user._id,
