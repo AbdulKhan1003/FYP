@@ -25,17 +25,17 @@ const About = () => {
         <Title size='6' heading="Meet the Team" />
         <div className="d-flex justify-content-around mt-5 flex-wrap">
           <div className='d-flex flex-column'>
-            <img loading='lazy' src="https://placehold.co/100x100" className="rounded-circle team-image border border-dark" alt="Team Member" />
+            <img loading='lazy' src="talha.jpg" className="rounded-circle team-image border border-dark" alt="Team Member" />
             <h3 className='my-3 text-center'>Talha Zubair</h3>
             <p className='text-center text-warning'>Designer & Documentor</p>
           </div>
           <div className='d-flex flex-column'>
-            <img loading='lazy' src="https://placehold.co/100x100" className='rounded-circle team-image border border-dark' alt="" />
+            <img loading='lazy' src="abdul.jpg" className='rounded-circle team-image border border-dark' alt="" />
             <h3 className='my-3 text-center'>Abdul Hadi Khan</h3>
             <p className='text-center text-warning'>FrontEnd Developer & Tester</p>
           </div>
           <div className='d-flex flex-column'>
-            <img loading='lazy' src='https://placehold.co/100x100' className='rounded-circle team-image border border-dark' alt="" />
+            <img loading='lazy' src='ahsan.jpg' className='rounded-circle team-image border border-dark' alt="" />
             <h3 className='my-3 text-center'>Ahsan Naeem</h3>
             <p className='text-center text-warning'>Full Stack Developer & Tester</p>
           </div>

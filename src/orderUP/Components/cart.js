@@ -23,6 +23,7 @@ const Cart = () => {
     setTotalPrice(price);
     setTotalCount(count);
     setPage("Cart");
+    console.log("CI", cartItems)
   }, [cartItems]);
 
   const removeItem = (id) => {
@@ -52,7 +53,8 @@ const Cart = () => {
   }
 
   const removeProductsByRestName = (restName) => {
-    setCartItems(cartItems.filter(rest => rest.restName !== restName));
+    const updatedCartItems = cartItems.filter(rest => rest.restaurant.name !== restName);
+    setCartItems(updatedCartItems);
   }
 
   return (
@@ -60,13 +62,17 @@ const Cart = () => {
       <BreadCrumbs />
       {cartItems.map((rest, index) => (
         <div key={index} className="card mb-5 container">
-          <div className="card-header d-flex">
-            <b className='ms-3 fs-4'>{rest.restName}</b>
+          <div className="card-header d-flex align-items-center">
+            {/* Optional logo display */}
+            {/* <img src={`${API_URL}/images/${rest.restaurant.logo}`} alt="logo" style={{ width: 40, height: 40, marginRight: 10 }} /> */}
+            <b className='ms-3 fs-4'>{rest.restaurant.name}</b>
             <div className='ms-auto me-5 mt-2'>
-              <FontAwesomeIcon className='fa-xl me-5'
-                onClick={() => removeProductsByRestName(rest.restName)}
+              <FontAwesomeIcon
+                className='fa-xl me-5'
+                onClick={() => removeProductsByRestName(rest.restaurant.name)}
                 icon={faTrash}
-                style={{ color: 'red', cursor: 'pointer' }} />
+                style={{ color: 'red', cursor: 'pointer' }}
+              />
             </div>
           </div>
           <div className="card-body p-0">
@@ -83,7 +89,11 @@ const Cart = () => {
                   </select>
                 </div>
                 <div className="col-3 cartImg py-3">
-                  <img style={{ width: '150px', height: '90px' }} src={`${API_URL}/images/${item.image}`} alt={item.name} />
+                  <img
+                    style={{ width: '150px', height: '90px' }}
+                    src={`${API_URL}/images/${item.image}`}
+                    alt={item.name}
+                  />
                 </div>
                 <div className="col-2 cartName d-flex justify-content-start align-items-center">
                   <div>{item.name}</div>
@@ -92,7 +102,9 @@ const Cart = () => {
                   <div><b>Rs. {item.price}</b></div>
                 </div>
                 <div className="col-3 cartRem d-flex justify-content-center align-items-center">
-                  <button className="btn btn-sm rounded-pill btn-outline-danger" onClick={() => removeItem(item._id)}>
+                  <button
+                    className="btn btn-sm rounded-pill btn-outline-danger"
+                    onClick={() => removeItem(item._id)}>
                     Remove
                   </button>
                 </div>

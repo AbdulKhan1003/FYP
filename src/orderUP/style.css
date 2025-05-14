@@ -69,6 +69,12 @@ footer {
   align-self: center;
 }
 
+@media screen and (max-width:650px) {
+  .team-image {
+  width: 35vw !important;
+}
+}
+
 .menu-bg {
   background-color: rgba(86, 243, 180, 0.2);
 }

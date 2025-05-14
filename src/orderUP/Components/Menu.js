@@ -71,13 +71,10 @@ const Menu = () => {
                   <div>
                     <h3 className=''>{restaurantItems.name}</h3>
                   </div>
-                  <h5 className="card-title mt-0 text-secondary">{restaurantItems.address.address},{restaurantItems.address.city}</h5>
-                  <h2 className="badge bg-info fs-6 text-dark mt-2">{restaurantItems.phone}</h2>
-                  <div>
-                    <h5 className=''>Rating: {restaurantItems.rating}⭐</h5>
-                  </div>
-                  <div>
-                    <h5 className='mt-3'>Payment: <span className='badge bg-danger'>{restaurantItems.deliveryOptions}</span></h5>
+                  <h5 className="card-title mt-3 text-secondary">{restaurantItems.address.address},{restaurantItems.address.city}</h5>
+                  <h2 className="badge bg-info fs-6 text-dark mt-3">{restaurantItems.phone}</h2>
+                  <div className='d-flex align-items-center align-content-center'>
+                    <h5 className='mt-3'>Payment Method: <span className='bg-danger text-white fs-6 rounded-3 p-1'>COD</span></h5>
                   </div>
                 </div>
               </div>

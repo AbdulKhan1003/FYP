@@ -281,7 +281,7 @@ const Restaurants = () => {
   if (items) {
     return (
       <div>
-        <div className='menu-bg container pt-3'>
+        <div className='menu-bg container py-3'>
           <Title heading={`All Products for ${location.state?.restaurantName}`}></Title>
           <div className="d-flex mt-3">
             <div className="input-group searchBar">
